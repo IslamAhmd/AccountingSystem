@@ -15,6 +15,7 @@ class CreateImportsTable extends Migration
     {
         Schema::create('imports', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('client_id');
             $table->string('name');
             $table->unsignedBigInteger('import_num');
             $table->date('starts_at');
@@ -22,6 +23,8 @@ class CreateImportsTable extends Migration
             $table->unsignedBigInteger('budget');
             $table->boolean('employee');
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }
 

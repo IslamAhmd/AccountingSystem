@@ -25,6 +25,9 @@ class CreateServicesTable extends Migration
             $table->string('barcode');
             $table->string('brand');
             $table->text('notes');
+            $table->boolean('repo');
+            $table->unsignedBigInteger('repo_quantity')->default('null');
+            $table->unsignedBigInteger('least_quantity')->default('null');
             $table->boolean('disabled');
             $table->timestamps();
         });
