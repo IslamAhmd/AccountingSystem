@@ -26,8 +26,8 @@ class CreateProductsTable extends Migration
             $table->string('brand');
             $table->text('notes');
             $table->boolean('repo');
-            $table->unsignedBigInteger('repo_quantity')->default('null');
-            $table->unsignedBigInteger('least_quantity')->default('null');
+            $table->unsignedBigInteger('repo_quantity')->nullable();
+            $table->unsignedBigInteger('least_quantity')->nullable();
             $table->boolean('disabled');
             $table->timestamps();
         });

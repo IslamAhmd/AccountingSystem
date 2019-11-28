@@ -24,6 +24,7 @@ Route::post('login', 'UserController@authenticate');
 
 Route::group(['middleware' => ['jwt.verify']], function(){
 
-    
+    Route::resource('client', 'ClientController')->except(['create', 'edit']);
+    Route::post('role', 'PermissionController@assignRolePermissions');
 
 });

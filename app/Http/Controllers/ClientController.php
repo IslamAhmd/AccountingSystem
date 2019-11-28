@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Client;
 use Illuminate\Http\Request;
+use Validator;
 
 class ClientController extends Controller
 {
@@ -17,15 +18,6 @@ class ClientController extends Controller
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -33,9 +25,41 @@ class ClientController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request){
+
+        $rules = [
+            'type' => 'required',
+            'trade_name' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'mobile' => 'required|integer',
+            'phone' => 'required|integer',
+            'first_address' => 'required|string',
+            'sec_address' => 'required|string',
+            'governorate' => 'required|string',
+            'postal_code' => 'required|integer',
+            'country' => 'required|string',
+            'city' => 'required|string',
+            'code_num' => 'required|integer',
+            'currency' => 'required|string',
+            'email' => 'required|string|email',
+            'notes' => 'required',
+            'language' => 'required|string',
+            'send_data' => 'Boolean',
+            'commercial_register' => 'string',
+            'tax_record' => 'string'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+
+            return response()->json($validator->errors(), 400);
+
+        }
+
+        $client = Client::create($request->all());
+        return response()->json($client, 201);
     }
 
     /**
@@ -49,16 +73,6 @@ class ClientController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Client $client)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.

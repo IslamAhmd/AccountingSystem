@@ -24,8 +24,14 @@ class CreateEmployeesTable extends Migration
             $table->string('governorate');
             $table->string('postal_code');
             $table->string('country');
-            $table->string('language');
-            $table->timestamps();
+			$table->string('language');
+			$table->string('email')->unique();
+            $table->text('notes');
+            $table->string('role_name');
+			$table->timestamps();
+			
+            $table->foreign('role_name')->references('name')->on('roles')->onDelete('cascade');
+
         });
     }
 

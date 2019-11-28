@@ -3,83 +3,45 @@
 namespace App\Http\Controllers;
 
 use App\Permission;
+use App\Role;
 use Illuminate\Http\Request;
+use Validator;
 
 class PermissionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+    public function assignRolePermissions(Request $request){
+
+        $rules = [
+            'name' => 'required|string',
+            'admin' => 'boolean',
+            'type' => 'required|string',
+            'permission' => 'required|string',
+            'status' => 'boolean'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+
+            return response()->json($validator->errors(), 400);
+
+        }
+
+        $role = Role::create([
+            'name' => $request->name,
+            'admin' => $request->admin
+        ]);
+
+        $permission = Permission::create([
+            'type' => $request->type,
+            'permission' => $request->permission,
+            'status' => $request->status
+        ]);
+
+        $role->permissions()->sync($role);
+
+        return response()->json([$role->name => $role->permissions()->permission], 201);
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Permission  $permission
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Permission $permission)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Permission  $permission
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Permission $permission)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Permission  $permission
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Permission $permission)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Permission  $permission
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Permission $permission)
-    {
-        //
-    }
 }
