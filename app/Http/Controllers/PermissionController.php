@@ -6,6 +6,7 @@ use App\Permission;
 use App\Role;
 use Illuminate\Http\Request;
 use Validator;
+use PermissionRole;
 
 class PermissionController extends Controller
 {
@@ -15,8 +16,8 @@ class PermissionController extends Controller
             'name' => 'required|string',
             'admin' => 'boolean',
             'type' => 'required|string',
-            'permission' => 'required|string',
-            'status' => 'boolean'
+            'name' => 'required',
+            'viewname' => 'required'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -32,15 +33,28 @@ class PermissionController extends Controller
             'admin' => $request->admin
         ]);
 
-        $permission = Permission::create([
+        $permission = [];
+        $permission = Permission::where([
             'type' => $request->type,
-            'permission' => $request->permission,
-            'status' => $request->status
-        ]);
+            'viewname' => $request->viewname
+        ])->get();
 
-        $role->permissions()->sync($role);
+        dd($permission);
 
-        return response()->json([$role->name => $role->permissions()->permission], 201);
+        for($i = 0; $i < count($permission); $i++){
+            
+            $permission_role = PermissionRole::create([
+                'role_id' => $role->id,
+                'permission_id' => $permission
+            ]);
+
+        }
+        
+
+        dd($permission_role);
+        
+
+        // return response()->json([], 201);
 
     }
 
