@@ -9,10 +9,10 @@ class Permission extends Model
 
     protected $guarded = [];
 
-    protected $casts = [
-        'name' => 'array',
-        'viewname' => 'array'
-    ];
+    // protected $casts = [
+    //     'name' => 'array',
+    //     'viewname' => 'array'
+    // ];
 
 
     public function roles() {
