@@ -15,7 +15,9 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        $clients = Client::select('first_name', 'last_name', 'mobile', 'phone', 'email', 'first_address', 'sec_address')->get();
+
+        return $clients;
     }
 
 
@@ -70,7 +72,16 @@ class ClientController extends Controller
      */
     public function show(Client $client)
     {
-        //
+        if(!$client){
+
+            return response()->json([
+                "message" => "Client Not Found"
+            ], 404);
+
+        }
+
+
+        return response()->json($client, 200);
     }
 
 
@@ -83,7 +94,9 @@ class ClientController extends Controller
      */
     public function update(Request $request, Client $client)
     {
-        //
+        $client->update($request->all());
+
+        return response()->json($client, 200);
     }
 
     /**
@@ -94,6 +107,26 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        //
+        if(!$client){
+
+            return response()->json([
+                "message" => "Client Not Found"
+            ], 404);
+
+        }
+
+        
+        $client->delete();
+
+        return response()->json("Client deleted Successfully", 204);
+    }
+
+
+    public function getClients(){
+
+        $clients = Client::select('id', 'first_name', 'last_name')->get();
+
+        return $clients;
+
     }
 }

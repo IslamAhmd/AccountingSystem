@@ -32,9 +32,9 @@ class PermissionController extends Controller
         ]);
 
 
-        $permissions[] = $request->permission;
-        // dd($permission);
-        foreach($permissions as $perm){
+        $perms[] = $request->permission;
+        // return $perms;
+        foreach($perms as $perm){
 
             // return $perm;
 
@@ -69,11 +69,31 @@ class PermissionController extends Controller
         }
 
 
+        // return permissions ids in array
+        $permission_id = PermissionRole::where('role_id', $role->id)->get()->pluck('permission_id');
+        // return $permission_id;
+       
+
+       // return permissions names in array
+        $permission_name = Permission::find($permission_id, ['permission']);
+        // return $permission_name;
+
+
         return response()->json([
-            $role->id => $role->name,
-            
+            "role_name" => $role->name,
+            "permissions" => $permission_name
         ], 201);
 
     }
 
+
+    public function getRoles(){
+
+        // get specific fields as array of objects
+        $role = Role::select('id', 'name')->get();
+
+        return response()->json($role, 200);
+    }
+
 }
+

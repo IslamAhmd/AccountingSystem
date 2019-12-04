@@ -24,7 +24,15 @@ Route::post('login', 'UserController@authenticate');
 
 Route::group(['middleware' => ['jwt.verify']], function(){
 
-    Route::resource('client', 'ClientController')->except(['create', 'edit']);
+	// add new client
+    Route::apiResource('client', 'ClientController')->except(['create', 'edit']);
+    // set roles and permissions
     Route::post('role', 'PermissionController@assignRolePermissions');
+    // get roles
+    Route::get('employee', 'PermissionController@getRoles');
+    // get clients to set dates
+    Route::get('getclients', 'ClientController@getClients');
+    // set dates with clients
+    // Route::post('date', '')
 
 });
