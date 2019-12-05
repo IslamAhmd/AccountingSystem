@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Client;
 use Illuminate\Http\Request;
-use Validator;
+
 
 class ClientController extends Controller
 {
@@ -70,13 +70,16 @@ class ClientController extends Controller
      * @param  \App\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function show(Client $client)
+    public function show($id)
     {
-        if(!$client){
+
+        $client = Client::find($id);
+
+        if(! $client){
 
             return response()->json([
-                "message" => "Client Not Found"
-            ], 404);
+                "Message" => "Not Found"
+            ]);
 
         }
 
@@ -92,8 +95,9 @@ class ClientController extends Controller
      * @param  \App\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Client $client)
+    public function update(Request $request, $id)
     {
+        $client = Client::find($id);
         $client->update($request->all());
 
         return response()->json($client, 200);
@@ -105,28 +109,23 @@ class ClientController extends Controller
      * @param  \App\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Client $client)
+    public function destroy($id)
     {
-        if(!$client){
+        $client = Client::find($id);
+
+        if(! $client){
 
             return response()->json([
-                "message" => "Client Not Found"
-            ], 404);
+                "Message" => "Not Found"
+            ]);
 
         }
 
-        
+
         $client->delete();
 
-        return response()->json("Client deleted Successfully", 204);
+        return response()->json(["message" => "Client deleted Successfully"], 204);
     }
 
 
-    public function getClients(){
-
-        $clients = Client::select('id', 'first_name', 'last_name')->get();
-
-        return $clients;
-
-    }
 }

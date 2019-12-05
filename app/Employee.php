@@ -7,5 +7,5 @@ use App\Role;
 
 class Employee extends Model
 {
-    
+    protected $guarded = [];
 }
