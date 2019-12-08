@@ -20,8 +20,8 @@ class CreateClientDatesTable extends Migration
             $table->time('duration');
             $table->time('time');
             $table->string('action');
-            $table->boolean('sharing');
-            $table->boolean('repeated');
+            $table->boolean('sharing')->default('0');
+            $table->boolean('repeated')->default('0');
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

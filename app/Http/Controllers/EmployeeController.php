@@ -124,12 +124,4 @@ class EmployeeController extends Controller
         );
     }
 
-
-    public function getRoles(){
-
-        // get specific fields as array of objects
-        $role = Role::select('id', 'name')->get();
-
-        return response()->json($role, 200);
-    }
 }

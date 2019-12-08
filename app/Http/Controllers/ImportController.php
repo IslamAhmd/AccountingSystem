@@ -53,20 +53,5 @@ class ImportController extends Controller
 
     }
 
-    public function getClientsForImports(){
-
-    	$clients = Client::select('id', 'first_name', 'last_name')->get();
-
-    	return $clients;
-    }
-
-    public function getEmployeesForImports(){
-    	
-    	$employees = Employee::select('id', 'name')->get();
-
-    	return $employees;
-    }
-
-
 
 }

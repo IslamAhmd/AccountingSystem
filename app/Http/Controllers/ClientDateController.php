@@ -10,14 +10,6 @@ use App\Client;
 class ClientDateController extends Controller
 {
 
-	public function getClients(){
-
-        $clients = Client::select('id')->get();
-
-        return $clients;
-
-    }
-
 
     public function index(){
 

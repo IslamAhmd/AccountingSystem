@@ -28,10 +28,6 @@ Route::group(['middleware' => ['jwt.verify']], function(){
     Route::apiResource('client', 'ClientController')->except(['create', 'edit']);
     // set roles and permissions
     Route::post('role', 'PermissionController@assignRolePermissions');
-    // get roles
-    Route::get('employeeRoles', 'EmployeeController@getRoles');
-    // get clients to set dates
-    Route::get('getclients', 'ClientDateController@getClients');
     // set dates with clients
     Route::apiResource('date', 'ClientDateController')->except(['create', 'edit']);
     // contact list
@@ -40,10 +36,5 @@ Route::group(['middleware' => ['jwt.verify']], function(){
     Route::apiResource('employee', 'EmployeeController')->except(['create', 'edit']);
     // add new imports
     Route::post('import', 'ImportController@store');
-    // get clients for imports
-    Route::get('importsclients', 'ImportController@getClientsForImports');
-    // get employees for imports
-    Route::get('importsemployees', 'ImportController@getEmployeesForImports');
-
 
 });

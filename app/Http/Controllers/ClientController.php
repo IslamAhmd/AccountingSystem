@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Client;
 use Illuminate\Http\Request;
+use Validator;
 
 
 class ClientController extends Controller
@@ -31,25 +32,23 @@ class ClientController extends Controller
 
         $rules = [
             'type' => 'required',
-            'trade_name' => 'required|string',
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
+            'trade_name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'mobile' => 'required|integer',
             'phone' => 'required|integer',
-            'first_address' => 'required|string',
-            'sec_address' => 'required|string',
-            'governorate' => 'required|string',
+            'first_address' => 'required',
+            'sec_address' => 'required',
+            'governorate' => 'required',
             'postal_code' => 'required|integer',
-            'country' => 'required|string',
+            'country' => 'required',
             'city' => 'required|string',
             'code_num' => 'required|integer',
-            'currency' => 'required|string',
-            'email' => 'required|string|email',
+            'currency' => 'required',
+            'email' => 'required|email',
             'notes' => 'required',
-            'language' => 'required|string',
+            'language' => 'required',
             'send_data' => 'Boolean',
-            'commercial_register' => 'string',
-            'tax_record' => 'string'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -98,6 +97,15 @@ class ClientController extends Controller
     public function update(Request $request, $id)
     {
         $client = Client::find($id);
+
+        if(! $client){
+
+            return response()->json([
+                "Message" => "Not Found"
+            ]);
+
+        }
+
         $client->update($request->all());
 
         return response()->json($client, 200);
