@@ -25,16 +25,22 @@ Route::post('login', 'UserController@authenticate');
 Route::group(['middleware' => ['jwt.verify']], function(){
 
 	// client
-    Route::apiResource('client', 'ClientController')->except(['create', 'edit']);
+    Route::apiResource('client', 'ClientController')->except(['create', 'edit', 'index']);
+    // return clients with name and type
+    Route::post('clients', 'ClientController@index');
     // set roles and permissions
-    Route::post('role', 'PermissionController@assignRolePermissions');
+    Route::apiResource('role', 'RolesController')->except(['create', 'edit', 'show']);
     // set dates with clients
     Route::apiResource('date', 'ClientDateController')->except(['create', 'edit']);
     // contact list
-    Route::get('contactlist', 'ClientDateController@contactList');
+    Route::post('contactlist', 'ClientController@contactList');
     // employee
-    Route::apiResource('employee', 'EmployeeController')->except(['create', 'edit']);
+    Route::apiResource('employee', 'EmployeeController')->except(['create', 'edit', 'index']);
+    // return employees with name and email
+    Route::post('employees', 'EmployeeController@index');
     // add new imports
     Route::post('import', 'ImportController@store');
+    // get all imports
+    Route::post('imports', 'ImportController@index');
 
 });

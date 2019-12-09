@@ -22,7 +22,7 @@ class CreateImportsTable extends Migration
             $table->date('starts_at');
             $table->date('ends_at');
             $table->unsignedBigInteger('budget');
-            $table->boolean('employee');
+            $table->boolean('employee')->default('0');
             $table->unsignedBigInteger('shipment_num');
             $table->text('container_data');
             $table->date('shipment_date');

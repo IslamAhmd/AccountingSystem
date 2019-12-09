@@ -7,13 +7,17 @@ use App\ClientDate;
 use Validator;
 use App\Client;
 
+
+// duration and time 
+
+
 class ClientDateController extends Controller
 {
 
 
     public function index(){
 
-    	$dates = ClientDate::select('client_id', 'date', 'duration', 'time', 'action')->get();
+    	$dates = ClientDate::get();
 
     	return $dates;
 
@@ -26,8 +30,8 @@ class ClientDateController extends Controller
 
             'client_id' => 'required|integer',
             'date' => 'required|date',
-            'duration' => 'required|date_format:H:i',
-            'time' => 'required|date_format:H:i',
+            'duration' => 'required',
+            'time' => 'required',
             'action' => 'required'
         ];
 
@@ -83,13 +87,6 @@ class ClientDateController extends Controller
         	"message" => "Date deleted Successfully"
         ]);
 
-    }
-
-
-    public function contactList(){
-
-    	$clients = Client::select('first_name', 'code_num')->get();
-    	return $clients;
     }
 
 }

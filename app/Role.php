@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
 
-    protected $guarded = [];
+    protected $fillable = ['name', 'admin'];
 
     
     public function permissions() {

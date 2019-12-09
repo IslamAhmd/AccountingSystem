@@ -14,11 +14,35 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $clients = Client::select('first_name', 'last_name', 'mobile', 'phone', 'email', 'first_address', 'sec_address')->get();
 
-        return $clients;
+    // ادارة الاعملاء 
+    public function index(Request $request)
+    {
+        $rules = [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'type' => 'required'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+
+            return response()->json($validator->errors(), 400);
+
+        }
+
+        $client = Client::where('first_name', $request->first_name)
+                        ->where('last_name', $request->last_name)
+                        ->where('type', $request->type)
+                        ->first();
+
+        if(! $client){
+
+            return ["message" => "Client not found"];
+        }
+
+        return $client;
     }
 
 
@@ -133,6 +157,38 @@ class ClientController extends Controller
         $client->delete();
 
         return response()->json(["message" => "Client deleted Successfully"], 204);
+    }
+
+
+    // قائمة الاتصال
+    public function contactList(Request $request){
+
+        $rules = [
+            'first_name' => 'required',
+            'code_num' => 'required|integer'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+
+            return response()->json($validator->errors(), 400);
+
+        }
+        
+
+        $client = Client::where('first_name', $request->first_name)
+                          ->where('code_num', $request->code_num)
+                          ->first();
+
+        if(! $client){
+
+            return ["message" => "Client not found"];
+
+        }
+
+        return $client;
+        
     }
 
 

@@ -14,11 +14,29 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $employees = Employee::get();
+        $rules = [
+            'name' => 'required',
+            'email' => 'required|email',
+            'treasury' => 'required'
+        ];
 
-        return $employees;
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 400);
+        }
+
+        $employee = Employee::where('name' , $request->name)
+                                ->where('email', $request->email)
+                                ->first();
+        if(! $employee){
+
+            return ["message" => "employee not found"];
+        }
+
+        return $employee;
     }
 
 
@@ -89,7 +107,6 @@ class EmployeeController extends Controller
     {
         $employee = Employee::find($id);
 
-        $employee = Employee::find($id);
         if(! $employee){
             return response()->json([
                 "Message" => "Employee Not Found"
