@@ -28,7 +28,10 @@ class ClientController extends Controller
 
         if($validator->fails()){
 
-            return response()->json($validator->errors(), 400);
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ], 400);
 
         }
 
@@ -39,10 +42,16 @@ class ClientController extends Controller
 
         if(! $client){
 
-            return ["message" => "Client not found"];
+            return response()->json([
+              "status" => "error",
+              "errors" => "Client Not Found"
+            ], 400);
         }
 
-        return $client;
+        return response()->json([
+          "status" => "success",
+          "data" => $client
+        ], 200);
     }
 
 
@@ -79,12 +88,19 @@ class ClientController extends Controller
 
         if($validator->fails()){
 
-            return response()->json($validator->errors(), 400);
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ], 400);
 
         }
 
         $client = Client::create($request->all());
-        return response()->json($client, 201);
+
+        return response()->json([
+          "status" => "success",
+          "data" => $client
+        ], 201);
     }
 
     /**
@@ -101,13 +117,19 @@ class ClientController extends Controller
         if(! $client){
 
             return response()->json([
-                "Message" => "Not Found"
-            ]);
+              "status" => "error",
+              "errors" => "Client Not Found"
+            ], 400);
 
         }
 
 
-        return response()->json($client, 200);
+        return response()->json([
+          "status" => "success",
+          "data" => $client
+        ], 200);
+
+
     }
 
 
@@ -125,14 +147,18 @@ class ClientController extends Controller
         if(! $client){
 
             return response()->json([
-                "Message" => "Not Found"
-            ]);
+              "status" => "error",
+              "errors" => "Client Not Found"
+            ], 400);
 
         }
 
         $client->update($request->all());
 
-        return response()->json($client, 200);
+        return response()->json([
+          "status" => "success",
+          "data" => $client
+        ], 200);
     }
 
     /**
@@ -148,15 +174,19 @@ class ClientController extends Controller
         if(! $client){
 
             return response()->json([
-                "Message" => "Not Found"
-            ]);
+              "status" => "error",
+              "errors" => "Client Not Found"
+            ], 400);
 
         }
 
 
         $client->delete();
 
-        return response()->json(["message" => "Client deleted Successfully"], 204);
+        return response()->json([
+          "status" => "success",
+          "message" => "Client deleted Successfully"
+        ]);
     }
 
 
@@ -172,7 +202,10 @@ class ClientController extends Controller
 
         if($validator->fails()){
 
-            return response()->json($validator->errors(), 400);
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ], 400);
 
         }
         
@@ -183,11 +216,17 @@ class ClientController extends Controller
 
         if(! $client){
 
-            return ["message" => "Client not found"];
+            return response()->json([
+              "status" => "error",
+              "errors" => "Client Not Found"
+            ], 400);
 
         }
 
-        return $client;
+        return response()->json([
+          "status" => "success",
+          "data" => $client
+        ], 200);
         
     }
 
