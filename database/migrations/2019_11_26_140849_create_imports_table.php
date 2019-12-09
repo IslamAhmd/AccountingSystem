@@ -21,6 +21,8 @@ class CreateImportsTable extends Migration
             $table->unsignedBigInteger('import_num');
             $table->date('starts_at');
             $table->date('ends_at');
+            $table->text('desc');
+            $table->string('tag');
             $table->unsignedBigInteger('budget');
             $table->boolean('employee')->default('0');
             $table->unsignedBigInteger('shipment_num');

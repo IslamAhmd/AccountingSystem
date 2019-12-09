@@ -30,10 +30,13 @@ class CreateClientsTable extends Migration
             $table->string('commercial_register')->default('null');
             $table->string('tax_record')->default('null');
             $table->unsignedInteger('code_num')->unique();
+            $table->string('billingmethod');
             $table->string('currency');
             $table->string('email')->unique();
+            $table->string('category');
             $table->text('notes');
             $table->string('language');
+            $table->string('prices');
             $table->boolean('send_data')->default('0');
             $table->timestamps();
         });

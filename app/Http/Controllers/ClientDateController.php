@@ -15,11 +15,38 @@ class ClientDateController extends Controller
 {
 
 
-    public function index(){
+    public function index(Request $request){
 
-    	$dates = ClientDate::get();
+        $rules = [
 
-    	return $dates;
+            'action' => 'required'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ], 400);
+
+        }
+
+    	$date = ClientDate::where('action', $request->action)->first();
+
+        if(! $date){
+
+            return response()->json([
+              "status" => "error",
+              "errors" => "Date Not Found"
+            ]);
+        }
+
+    	return response()->json([
+          "status" => "success",
+          "data" => $date
+        ], 200);
 
     }
 
@@ -32,19 +59,28 @@ class ClientDateController extends Controller
             'date' => 'required|date',
             'duration' => 'required',
             'time' => 'required',
-            'action' => 'required'
+            'action' => 'required',
+            'sharing' => 'Boolean',
+            'repeated' => 'Boolean'
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
         if($validator->fails()){
 
-            return response()->json($validator->errors(), 400);
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ], 400);
 
         }
 
         $date = ClientDate::create($request->all());
-        return response()->json($date, 201);
+
+        return response()->json([
+          "status" => "success",
+          "data" => $date
+        ], 201);
 
     }
 
@@ -54,20 +90,37 @@ class ClientDateController extends Controller
      	$date = ClientDate::find($id);
      	if(! $date){
      		return response()->json([
-     			"message" => "Date not Found"
-     		]);
+              "status" => "error",
+              "errors" => "Date Not Found"
+            ]);
+
      	}
 
-     	return response()->json($date, 200);
+     	return response()->json([
+          "status" => "success",
+          "data" => $date
+        ], 200);
     }
 
 
     public function update(Request $request, $id){
 
     	$date = ClientDate::find($id);
+
+        if(! $date){
+
+            return response()->json([
+              "status" => "error",
+              "errors" => "Date Not Found"
+            ]);
+
+        }
     	$date->update($request->all());
 
-        return response()->json($date, 200);
+        return response()->json([
+          "status" => "success",
+          "data" => $date
+        ], 200);
 
     }
 
@@ -76,15 +129,18 @@ class ClientDateController extends Controller
     	$date = ClientDate::find($id);
 
     	if(! $date){
+
      		return response()->json([
-     			"message" => "Date not Found"
-     		]);
+              "status" => "error",
+              "errors" => "Date Not Found"
+            ]);
      	}
 
      	$date->delete();
 
         return response()->json([
-        	"message" => "Date deleted Successfully"
+          "status" => "success",
+          "message" => "Date deleted Successfully"
         ]);
 
     }

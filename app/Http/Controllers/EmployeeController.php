@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Http\Controllers;
 
 use App\Employee;
@@ -25,18 +26,29 @@ class EmployeeController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if($validator->fails()){
-            return response()->json($validator->errors(), 400);
+
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ], 400);
         }
 
         $employee = Employee::where('name' , $request->name)
                                 ->where('email', $request->email)
                                 ->first();
+
         if(! $employee){
 
-            return ["message" => "employee not found"];
+            return response()->json([
+              "status" => "error",
+              "errors" => "Employee Not Found"
+            ]);
         }
 
-        return $employee;
+        return response()->json([
+          "status" => "success",
+          "data" => $employee
+        ], 200);
     }
 
 
@@ -68,11 +80,19 @@ class EmployeeController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if($validator->fails()){
-            return response()->json($validator->errors(), 400);
+
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ], 400);
         }
 
         $employee = Employee::create($request->all());
-        return response()->json($employee, 201);
+
+        return response()->json([
+          "status" => "success",
+          "data" => $employee
+        ], 201);
 
     }
 
@@ -88,11 +108,15 @@ class EmployeeController extends Controller
 
         if(! $employee){
             return response()->json([
-                "Message" => "Employee Not Found"
+              "status" => "error",
+              "errors" => "Employee Not Found"
             ]);
         }
 
-        return response()->json($employee, 200);
+        return response()->json([
+          "status" => "success",
+          "data" => $employee
+        ], 200);
     }
 
 
@@ -109,13 +133,17 @@ class EmployeeController extends Controller
 
         if(! $employee){
             return response()->json([
-                "Message" => "Employee Not Found"
+              "status" => "error",
+              "errors" => "Employee Not Found"
             ]);
         }
 
         $employee->update($request->all());
 
-        return response()->json($employee);
+        return response()->json([
+          "status" => "success",
+          "data" => $employee
+        ], 200);
     }
 
     /**
@@ -130,15 +158,18 @@ class EmployeeController extends Controller
         
         if(! $employee){
             return response()->json([
-                "Message" => "Employee Not Found"
+              "status" => "error",
+              "errors" => "Employee Not Found"
             ]);
+
         }
 
         $employee->delete();
 
         return response()->json([
-            "message" => "Employee deleted successfully"]
-        );
+          "status" => "success",
+          "message" => "Employee deleted Successfully"
+        ]);
     }
 
 }

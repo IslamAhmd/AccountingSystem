@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClientDate extends Model
 {
-    protected $fillable = ['client_id', 'date', 'duration', 'time', 'action'];
+    protected $guarded = [];
 
 
     public function setDateAttribute($value){

@@ -45,7 +45,7 @@ class ClientController extends Controller
             return response()->json([
               "status" => "error",
               "errors" => "Client Not Found"
-            ], 400);
+            ]);
         }
 
         return response()->json([
@@ -77,10 +77,13 @@ class ClientController extends Controller
             'country' => 'required',
             'city' => 'required|string',
             'code_num' => 'required|integer',
+            'billingmethod' => 'required',
             'currency' => 'required',
             'email' => 'required|email',
+            'category' => 'required',
             'notes' => 'required',
             'language' => 'required',
+            'prices' => 'required',
             'send_data' => 'Boolean',
         ];
 
@@ -119,7 +122,7 @@ class ClientController extends Controller
             return response()->json([
               "status" => "error",
               "errors" => "Client Not Found"
-            ], 400);
+            ]);
 
         }
 
@@ -149,7 +152,7 @@ class ClientController extends Controller
             return response()->json([
               "status" => "error",
               "errors" => "Client Not Found"
-            ], 400);
+            ]);
 
         }
 
@@ -176,7 +179,7 @@ class ClientController extends Controller
             return response()->json([
               "status" => "error",
               "errors" => "Client Not Found"
-            ], 400);
+            ]);
 
         }
 
@@ -219,7 +222,7 @@ class ClientController extends Controller
             return response()->json([
               "status" => "error",
               "errors" => "Client Not Found"
-            ], 400);
+            ]);
 
         }
 

@@ -31,7 +31,9 @@ Route::group(['middleware' => ['jwt.verify']], function(){
     // set roles and permissions
     Route::apiResource('role', 'RolesController')->except(['create', 'edit', 'show']);
     // set dates with clients
-    Route::apiResource('date', 'ClientDateController')->except(['create', 'edit']);
+    Route::apiResource('date', 'ClientDateController')->except(['create', 'edit', 'index']);
+    // get dates using action
+    Route::post('dates', 'ClientDateController@index');
     // contact list
     Route::post('contactlist', 'ClientController@contactList');
     // employee

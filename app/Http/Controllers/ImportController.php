@@ -20,14 +20,17 @@ class ImportController extends Controller
             'name' => 'required',
             'import_num' => 'required',
             'client_id' => 'required',
-            'employee_id' => 'required'
+            'employee_id' => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
         
         if($validator->fails()){
 
-            return response()->json($validator->errors(), 400);
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ], 400);
 
         }
 
@@ -39,7 +42,10 @@ class ImportController extends Controller
 
         if(! $import){
 
-            return ["message" => "Import not found"];
+            return response()->json([
+              "status" => "error",
+              "errors" => "Import Not Found"
+            ]);
         }
 
 		return $import;
@@ -57,6 +63,8 @@ class ImportController extends Controller
     		'budget' => 'required',
     		'client_id' => 'required',
     		'employee_id' => 'required',
+            'desc' => 'required',
+            'tag' => 'required',
     		'shipment_num' => 'required|integer',
     		'container_data' => 'required',
     		'shipment_date' => 'required|date',
@@ -73,13 +81,19 @@ class ImportController extends Controller
 
         if($validator->fails()){
 
-            return response()->json($validator->errors(), 400);
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ], 400);
 
         }
 
     	$import = Import::create($request->all());
 
-    	return response()->json($import, 201);
+    	return response()->json([
+          "status" => "success",
+          "data" => $import
+        ], 201);
 
     }
 
