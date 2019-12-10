@@ -48,7 +48,10 @@ class ImportController extends Controller
             ]);
         }
 
-		return $import;
+		return response()->json([
+          "status" => "success",
+          "data" => $import
+        ], 200);
 		
 	}
 
@@ -69,7 +72,7 @@ class ImportController extends Controller
     		'container_data' => 'required',
     		'shipment_date' => 'required|date',
     		'arrival_date' => 'required|date',
-    		'abstract_name' => 'required|integer',
+    		'abstract_name' => 'required',
     		'abstract_num' => 'required|integer',
     		'shipment_location' => 'required',
     		'doc_credit_num' => 'required|integer',

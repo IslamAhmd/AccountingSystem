@@ -8,6 +8,7 @@ use Validator;
 use App\Client;
 
 
+
 // duration and time 
 
 
@@ -18,7 +19,7 @@ class ClientDateController extends Controller
     public function index(Request $request){
 
         $rules = [
-
+            'employee' => 'required',
             'action' => 'required'
         ];
 

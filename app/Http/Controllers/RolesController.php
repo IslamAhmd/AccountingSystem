@@ -15,7 +15,11 @@ class RolesController extends Controller
 
         $roles = Role::get();
 
-        return $roles;
+
+        return response()->json([
+          "status" => "success",
+          "data" => $roles
+        ], 200);
 
     }
 
@@ -32,7 +36,11 @@ class RolesController extends Controller
 
         if($validator->fails()){
 
-            return response()->json($validator->errors(), 400);
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ], 400);
+
 
         }
 
@@ -91,8 +99,11 @@ class RolesController extends Controller
         // return $permission_name;
 
         return response()->json([
+            "status" => "success",
+            "data" => [
             "role_name" => $role->name,
             "permissions" => $permission_name
+            ]
         ], 201);
 
     }
@@ -110,7 +121,10 @@ class RolesController extends Controller
 
         if($validator->fails()){
 
-            return response()->json($validator->errors(), 400);
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ], 400);
 
         }
 
@@ -118,7 +132,11 @@ class RolesController extends Controller
 
         if(! $role){
 
-            return ["message" => "Role not found"];
+            return response()->json([
+              "status" => "error",
+              "errors" => "Role Not Found"
+            ]);
+
             
         }
 
@@ -178,8 +196,11 @@ class RolesController extends Controller
         // return $permission_name;
 
         return response()->json([
+            "status" => "success",
+            "data" => [
             "role_name" => $role->name,
             "permissions" => $permission_name
+            ]
         ], 201);
 
     }
@@ -189,12 +210,19 @@ class RolesController extends Controller
 
         $role = Role::find($id);
         if(! $role){
-            return ["message" => "Role not found"];
+            
+            return response()->json([
+              "status" => "error",
+              "errors" => "Role Not Found"
+            ]);
         }
 
         $role->delete();
 
-        return ["message" => "Role deleted successfully"];
+        return response()->json([
+          "status" => "success",
+          "message" => "Client deleted Successfully"
+        ]);
     }
 
 }
