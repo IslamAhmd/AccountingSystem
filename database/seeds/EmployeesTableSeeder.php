@@ -14,7 +14,7 @@ class EmployeesTableSeeder extends Seeder
     public function run()
     {
     	$super_admin = Role::where('name', 'super admin')->first();
-    	
+
         Employee::create([
             'name' => 'Admin',
             'mobile' => '123456',
@@ -28,7 +28,7 @@ class EmployeesTableSeeder extends Seeder
             'language' => 'ara',
        		'email' => 'admin@system.com',
        		'notes' => 'Super Admin of Accounting System',
-       		'role_name' => $super_admin
+       		'role_name' => $super_admin->name
         ]);
     }
 }

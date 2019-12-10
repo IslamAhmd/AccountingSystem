@@ -21,5 +21,7 @@ class RolesTableSeeder extends Seeder
 
         $permissions = Permission::get();
 
+        $super_admin->permissions()->attach($permissions);
+
     }
 }
