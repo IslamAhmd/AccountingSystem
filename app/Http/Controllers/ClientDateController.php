@@ -16,37 +16,13 @@ class ClientDateController extends Controller
 {
 
 
-    public function index(Request $request){
+    public function index(){
 
-        $rules = [
-            'employee' => 'required',
-            'action' => 'required'
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if($validator->fails()){
-
-            return response()->json([
-              "status" => "error",
-              "errors" => $validator->errors()
-            ], 400);
-
-        }
-
-    	$date = ClientDate::where('action', $request->action)->first();
-
-        if(! $date){
-
-            return response()->json([
-              "status" => "error",
-              "errors" => "Date Not Found"
-            ]);
-        }
+      $dates = ClientDate::get();
 
     	return response()->json([
           "status" => "success",
-          "data" => $date
+          "data" => $dates
         ], 200);
 
     }

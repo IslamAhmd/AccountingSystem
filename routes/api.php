@@ -25,24 +25,22 @@ Route::post('login', 'UserController@authenticate');
 Route::group(['middleware' => ['jwt.verify']], function(){
 
 	// client
-    Route::apiResource('client', 'ClientController')->except(['create', 'edit', 'index']);
-    // return clients with name and type
-    Route::post('clients', 'ClientController@index');
+    Route::apiResource('client', 'ClientController')->except(['create', 'edit']);
     // set roles and permissions
     Route::apiResource('role', 'RolesController')->except(['create', 'edit', 'show']);
     // set dates with clients
-    Route::apiResource('date', 'ClientDateController')->except(['create', 'edit', 'index']);
-    // get dates using action
-    Route::post('dates', 'ClientDateController@index');
+    Route::apiResource('date', 'ClientDateController')->except(['create', 'edit']);
     // contact list
-    Route::post('contactlist', 'ClientController@contactList');
+    Route::get('contactlist', 'ClientController@contactList');
     // employee
-    Route::apiResource('employee', 'EmployeeController')->except(['create', 'edit', 'index']);
-    // return employees with name and email
-    Route::post('employees', 'EmployeeController@index');
+    Route::apiResource('employee', 'EmployeeController')->except(['create', 'edit']);
     // add new imports
     Route::post('import', 'ImportController@store');
     // get all imports
-    Route::post('imports', 'ImportController@index');
+    Route::get('imports', 'ImportController@index');
+    // Supplier
+    Route::apiResource('supplier', 'SupplierController')->except(['create', 'edit', 'index']);
+    // get all suppliers
+    Route::post('suppliers', 'SupplierController@index');
 
 });

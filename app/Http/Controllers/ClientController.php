@@ -16,41 +16,15 @@ class ClientController extends Controller
      */
 
     // ادارة الاعملاء 
-    public function index(Request $request)
+    public function index()
     {
-        $rules = [
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'type' => 'required'
-        ];
 
-        $validator = Validator::make($request->all(), $rules);
 
-        if($validator->fails()){
-
-            return response()->json([
-              "status" => "error",
-              "errors" => $validator->errors()
-            ], 400);
-
-        }
-
-        $client = Client::where('first_name', $request->first_name)
-                        ->where('last_name', $request->last_name)
-                        ->where('type', $request->type)
-                        ->first();
-
-        if(! $client){
-
-            return response()->json([
-              "status" => "error",
-              "errors" => "Client Not Found"
-            ]);
-        }
+        $clients = Client::get();
 
         return response()->json([
           "status" => "success",
-          "data" => $client
+          "data" => $clients
         ], 200);
     }
 
@@ -194,41 +168,15 @@ class ClientController extends Controller
 
 
     // قائمة الاتصال
-    public function contactList(Request $request){
+    public function contactList(){
+      
 
-        $rules = [
-            'first_name' => 'required',
-            'code_num' => 'required|integer'
-        ];
+        $clients = Client::select('first_name', 'last_name', 'trade_name', 'mobile', 'phone', 'code_num', 'email')->get();
 
-        $validator = Validator::make($request->all(), $rules);
-
-        if($validator->fails()){
-
-            return response()->json([
-              "status" => "error",
-              "errors" => $validator->errors()
-            ], 400);
-
-        }
-        
-
-        $client = Client::where('first_name', $request->first_name)
-                          ->where('code_num', $request->code_num)
-                          ->first();
-
-        if(! $client){
-
-            return response()->json([
-              "status" => "error",
-              "errors" => "Client Not Found"
-            ]);
-
-        }
 
         return response()->json([
           "status" => "success",
-          "data" => $client
+          "data" => $clients
         ], 200);
         
     }

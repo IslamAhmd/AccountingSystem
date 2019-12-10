@@ -15,7 +15,7 @@ class CreateSuppliersTable extends Migration
     {
         Schema::create('suppliers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('trade_name');
+            $table->string('trade_name')->unique();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('mobile');
@@ -26,8 +26,13 @@ class CreateSuppliersTable extends Migration
             $table->string('governorate');
             $table->string('postal_code');
             $table->string('country');
-            $table->string('commercial_register')->default('null');
-            $table->string('tax_record')->default('null');
+            $table->string('commercial_register')->default('0');
+            $table->string('tax_record')->default('0');
+            $table->string('currency');
+            $table->unsignedBigInteger('balance');
+            $table->date('balance_date');
+            $table->string('email')->unique();
+            $table->text('notes');
             $table->timestamps();
         });
     }

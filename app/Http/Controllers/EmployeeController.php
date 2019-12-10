@@ -15,39 +15,13 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $rules = [
-            'name' => 'required',
-            'email' => 'required|email',
-            'treasury' => 'required'
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if($validator->fails()){
-
-            return response()->json([
-              "status" => "error",
-              "errors" => $validator->errors()
-            ], 400);
-        }
-
-        $employee = Employee::where('name' , $request->name)
-                                ->where('email', $request->email)
-                                ->first();
-
-        if(! $employee){
-
-            return response()->json([
-              "status" => "error",
-              "errors" => "Employee Not Found"
-            ]);
-        }
+        $employees = Employee::get();
 
         return response()->json([
           "status" => "success",
-          "data" => $employee
+          "data" => $employees
         ], 200);
     }
 
@@ -65,14 +39,14 @@ class EmployeeController extends Controller
             'name' => 'required',
             'mobile' => 'required|integer',
             'phone' => 'required|integer',
-            'first_address' => 'required|string',
-            'sec_address' => 'required|string',
-            'governorate' => 'required|string',
+            'first_address' => 'required',
+            'sec_address' => 'required',
+            'governorate' => 'required',
             'postal_code' => 'required|integer',
-            'country' => 'required|string',
-            'city' => 'required|string',
-            'language' => 'string',
-            'email' => 'string|email',
+            'country' => 'required',
+            'city' => 'required',
+            'language' => 'required',
+            'email' => 'required|email|unique:employees',
             'notes' => 'required',
             'role_name' => 'required'
         ];
