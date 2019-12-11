@@ -39,8 +39,5 @@ Route::group(['middleware' => ['jwt.verify']], function(){
     // get all imports
     Route::get('imports', 'ImportController@index');
     // Supplier
-    Route::apiResource('supplier', 'SupplierController')->except(['create', 'edit', 'index']);
-    // get all suppliers
-    Route::post('suppliers', 'SupplierController@index');
-
+    Route::apiResource('supplier', 'SupplierController')->except(['create', 'edit']);
 });

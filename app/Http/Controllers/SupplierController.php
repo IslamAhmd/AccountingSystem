@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Supplier;
+use Validator;
 
 class SupplierController extends Controller
 {
@@ -14,7 +15,12 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        //
+        $suppliers = Supplier::get();
+
+        return response()->json([
+          "status" => "success",
+          "data" => $suppliers
+        ], 200);
     }
 
 
@@ -39,11 +45,31 @@ class SupplierController extends Controller
             'country' => 'required',
             'city' => 'required',
             'currency' => 'required',
-            'balance' => 'required',
-            'balance_date' => 'required',
+            'balance' => 'required|integer',
+            'balance_date' => 'required|date',
             'email' => 'required|email|unique:suppliers',
             'notes' => 'required',
         ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ], 400);
+
+        }
+
+        $supplier = Supplier::create($request->all());
+
+        return response()->json([
+          "status" => "success",
+          "data" => $supplier
+        ], 201);
+
+
     }
 
     /**
@@ -54,7 +80,19 @@ class SupplierController extends Controller
      */
     public function show($id)
     {
-        //
+        $supplier = Supplier::find($id);
+
+        if(! $supplier){
+            return response()->json([
+              "status" => "error",
+              "errors" => "Supplier Not Found"
+            ]);
+        }
+
+        return response()->json([
+          "status" => "success",
+          "data" => $supplier
+        ], 200);
     }
 
 
@@ -67,7 +105,21 @@ class SupplierController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $supplier = Supplier::find($id);
+
+        if(! $supplier){
+            return response()->json([
+              "status" => "error",
+              "errors" => "Supplier Not Found"
+            ]);
+        }
+
+        $supplier->update($request->all());
+
+        return response()->json([
+          "status" => "success",
+          "data" => $supplier
+        ], 200);
     }
 
     /**
@@ -78,6 +130,22 @@ class SupplierController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $supplier = Supplier::find($id);
+        
+        if(! $supplier){
+            return response()->json([
+              "status" => "error",
+              "errors" => "Supplier Not Found"
+            ]);
+
+        }
+
+        $supplier->delete();
+
+        return response()->json([
+          "status" => "success",
+          "message" => "Supplier deleted Successfully"
+        ]);
+
     }
 }
