@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Employee;
 use App\Role;
+use App\User;
 
 class EmployeesTableSeeder extends Seeder
 {

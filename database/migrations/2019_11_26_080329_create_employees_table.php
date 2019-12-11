@@ -32,6 +32,7 @@ class CreateEmployeesTable extends Migration
 			
             $table->foreign('role_name')->references('name')->on('roles')->onDelete('cascade');
 
+
         });
     }
 

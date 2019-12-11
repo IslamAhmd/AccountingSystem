@@ -13,7 +13,7 @@ class UserController extends Controller
     public function authenticate(Request $request)
         {
             $credentials = $request->only('email', 'password');
-            // $user = Employee::where('email', $request->email)->first();
+            $user = Employee::where('email', $request->email)->first();
 
 
             if (Auth::attempt($credentials)) {
@@ -22,12 +22,16 @@ class UserController extends Controller
                 	"status" => "success",
                 	"data" => [
                         "token" => $token,
-                        "user" => "bla"
+                        "user" => $user
                     ]
                 ], 200);
             }
 
-            return response()->json(['error' => 'invalid_credentials'], 400);
+
+            return response()->json([
+                "status" => "error",
+                'error' => 'invalid_credentials'
+            ], 400);
             
         }
 

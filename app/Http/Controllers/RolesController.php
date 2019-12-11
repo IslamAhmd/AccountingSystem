@@ -27,7 +27,7 @@ class RolesController extends Controller
     public function store(Request $request){
 
         $rules = [
-            'name' => 'required|string',
+            'name' => 'required|string|unique:roles',
             'admin' => 'boolean',
             'permission' => 'required'
         ];

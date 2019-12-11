@@ -7,6 +7,8 @@ use App\Employee;
 use Illuminate\Http\Request;
 use Validator;
 use App\Role;
+use App\User;
+
 
 class EmployeeController extends Controller
 {
@@ -35,7 +37,6 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         $rules = [
-
             'name' => 'required',
             'mobile' => 'required|integer',
             'phone' => 'required|integer',
@@ -62,6 +63,15 @@ class EmployeeController extends Controller
         }
 
         $employee = Employee::create($request->all());
+
+        // return $employee->id;
+
+        $user = User::create([
+            "name" => $employee->name,
+            'employee_id' => $employee->id,
+            "email" => $employee->email,
+            "password" => bcrypt('123456')
+        ]);
 
         return response()->json([
           "status" => "success",
