@@ -3,6 +3,7 @@
 /public/storage
 /storage/*.key
 /vendor
+/lastVersionOfRolesPermissionsCode
 .env
 .phpunit.result.cache
 Homestead.json

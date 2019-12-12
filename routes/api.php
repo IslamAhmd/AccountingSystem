@@ -34,10 +34,16 @@ Route::group(['middleware' => ['jwt.verify']], function(){
     Route::get('contactlist', 'ClientController@contactList');
     // employee
     Route::apiResource('employee', 'EmployeeController')->except(['create', 'edit']);
-    // add new imports
-    Route::post('import', 'ImportController@store');
-    // get all imports
-    Route::get('imports', 'ImportController@index');
+    // import
+    Route::apiResource('import', 'ImportController')->only(['index', 'store']);
     // Supplier
     Route::apiResource('supplier', 'SupplierController')->except(['create', 'edit']);
+    // payment reports
+    Route::apiResource('payment', 'PaymentReportsController')->only(['index', 'store']);
+    // Earning Reports
+    Route::apiResource('earning', 'EarningReportsController')->only(['index', 'store']);
+    // Bill Reports
+    Route::apiResource('billreport', 'BillReportsController')->only(['index', 'store']);
+    // Sale Reports
+    Route::apiResource('salereport', 'SalesReportsController')->only(['index', 'store']);
 });
