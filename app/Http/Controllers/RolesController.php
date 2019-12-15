@@ -146,12 +146,48 @@ class RolesController extends Controller
 
                 if($type['name'] == $permission['type']){
 
+                    // return $type['name'];
                     $value = $permission['value'];
-                    return $value;
+                    // return $value;
+
+                    $permission = Permission::where([
+                            'type' => $type['name'],
+                            'permission' => $value
+                    ])->first();
+
+
+
+                    // return $role;
+                    // return $permission;
+
+                    PermissionRole::create([
+                        'role_id' => $role->id,
+                        'permission_id' => $permission->id
+                    ]);
                     
                 }
             }
         }
+
+
+        // return permissions ids in array
+        $permission_id = PermissionRole::where('role_id', $role->id)->get()->pluck('permission_id');
+    //     // return $permission_id;
+       
+
+    //    // return permissions names in array
+        $permission_name = Permission::find($permission_id, ['permission']);
+
+
+    //     // return $permission_name;
+
+        return response()->json([
+            "status" => "success",
+            "data" => [
+            "role_name" => $role->name,
+            "permissions" => $permission_name
+            ]
+        ], 201);
         
     }
 
@@ -175,7 +211,7 @@ class RolesController extends Controller
             return response()->json([
               "status" => "error",
               "errors" => $validator->errors()
-            ], 400);
+            ]);
 
         }
 
@@ -198,26 +234,24 @@ class RolesController extends Controller
             'admin' => $request->admin
         ]);
 
-        // return $role;
+         $types = $request->type;
+        // return $types;
+        // return $types[1]['name'];
+        $permissions = $request->permission;
+        // return $permissions;
+        // return $permissions[2]['type'];
+        foreach($types as $type){
 
-        $perms[] = $request->permission;
-        // return $perms;
-        foreach($perms as $perm){
+            foreach ($permissions as $permission) {
 
-            // return $perm;
+                if($type['name'] == $permission['type']){
 
-            foreach($perm as $each_perm){
+                    // return $type['name'];
+                    $value = $permission['value'];
+                    // return $value;
 
-                $type = $each_perm["type"];
-                $values = $each_perm["values"];
-
-                // return $values;
-
-                foreach($values as $value){
-
-                    
                     $permission = Permission::where([
-                            'type' => $type,
+                            'type' => $type['name'],
                             'permission' => $value
                     ])->first();
 
@@ -230,10 +264,9 @@ class RolesController extends Controller
                         'role_id' => $role->id,
                         'permission_id' => $permission->id
                     ]);
+                    
                 }
-
             }
-
         }
 
 

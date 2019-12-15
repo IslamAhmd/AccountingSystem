@@ -4,7 +4,6 @@ use Illuminate\Database\Seeder;
 use App\Role;
 use App\Permission;
 
-
 class RolesTableSeeder extends Seeder
 {
     /**
