@@ -48,11 +48,19 @@ class ClientDateController extends Controller
             return response()->json([
               "status" => "error",
               "errors" => $validator->errors()
-            ], 400);
+            ]);
 
         }
 
-        $date = ClientDate::create($request->all());
+        $date = ClientDate::create([
+          'client_id' => $request->client_id,
+          'date' => $request->date,
+          'duration' => $request->duration,
+          'time' => $request->time,
+          'action' => $request->action,
+ 
+          'client_name' => Client::where('id', $request->client_id)->first()->trade_name
+        ]);
 
         return response()->json([
           "status" => "success",

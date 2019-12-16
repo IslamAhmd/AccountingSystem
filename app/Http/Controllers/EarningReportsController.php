@@ -37,7 +37,7 @@ class EarningReportsController extends Controller
             return response()->json([
               "status" => "error",
               "errors" => $validator->errors()
-            ], 400);
+            ]);
         }
 
         $earning = EarningReports::create($request->all());

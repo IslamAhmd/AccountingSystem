@@ -16,6 +16,7 @@ class CreateClientDatesTable extends Migration
         Schema::create('client_dates', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('client_id');
+            $table->string('client_name');
             $table->date('date');
             $table->time('duration');
             $table->time('time');
@@ -25,6 +26,7 @@ class CreateClientDatesTable extends Migration
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+
         });
     }
 

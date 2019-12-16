@@ -36,7 +36,7 @@ class BillReportsController extends Controller
             return response()->json([
               "status" => "error",
               "errors" => $validator->errors()
-            ], 400);
+            ]);
         }
 
         $bill = BillReports::create($request->all());

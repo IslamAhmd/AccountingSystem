@@ -57,7 +57,7 @@ class ImportController extends Controller
             return response()->json([
               "status" => "error",
               "errors" => $validator->errors()
-            ], 400);
+            ]);
 
         }
 

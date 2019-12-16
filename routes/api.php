@@ -46,4 +46,7 @@ Route::group(['middleware' => ['jwt.verify']], function(){
     Route::apiResource('billreport', 'BillReportsController')->only(['index', 'store']);
     // Sale Reports
     Route::apiResource('salereport', 'SalesReportsController')->only(['index', 'store']);
+    // Repos
+    Route::apiResource('repo', 'RepoController')->except(['create', 'edit']);
+
 });

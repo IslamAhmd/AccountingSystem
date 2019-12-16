@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Client;
 
 
 class ClientDate extends Model
@@ -25,5 +26,10 @@ class ClientDate extends Model
 
     	$this->attributes['time'] = date("H:i", strtotime($value));
     }  
+
+    public function getClientNameAttribute($value){
+
+        return Client::where('id', $this->client_id)->first()->trade_name;
+    }
 
 }

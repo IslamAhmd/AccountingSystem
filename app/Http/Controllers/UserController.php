@@ -31,7 +31,7 @@ class UserController extends Controller
             return response()->json([
                 "status" => "error",
                 'error' => 'invalid_credentials'
-            ], 400);
+            ]);
             
         }
 

@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use App\Supplier;
+use App\Repo;
 use Validator;
 
-class SupplierController extends Controller
+use Illuminate\Http\Request;
+
+class RepoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,14 +15,13 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $suppliers = Supplier::get();
+        $repos = Repo::paginate(5);
 
         return response()->json([
           "status" => "success",
-          "data" => $suppliers
+          "data" => $repos
         ], 200);
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -33,22 +32,13 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'trade_name' => 'required|unique:suppliers',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'mobile' => 'required|integer',
-            'phone' => 'required|integer',
-            'first_address' => 'required',
-            'sec_address' => 'required',
-            'governorate' => 'required',
-            'postal_code' => 'required',
-            'country' => 'required',
-            'city' => 'required',
-            'currency' => 'required',
-            'balance' => 'required|integer',
-            'balance_date' => 'required|date',
-            'email' => 'required|email|unique:suppliers',
-            'notes' => 'required',
+            'name' => 'required',
+            'location' => 'required',
+            'active' => 'boolean',
+            'primary' => 'boolean',
+            'show' => 'required',
+            'bill' => 'required',
+            'store' => 'required'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -59,17 +49,14 @@ class SupplierController extends Controller
               "status" => "error",
               "errors" => $validator->errors()
             ]);
-
         }
 
-        $supplier = Supplier::create($request->all());
+        $repo = Repo::create($request->all());
 
         return response()->json([
           "status" => "success",
-          "data" => $supplier
+          "data" => $repo
         ], 201);
-
-
     }
 
     /**
@@ -80,18 +67,18 @@ class SupplierController extends Controller
      */
     public function show($id)
     {
-        $supplier = Supplier::find($id);
+        $repo = Repo::find($id);
 
-        if(! $supplier){
+        if(! $repo){
             return response()->json([
               "status" => "error",
-              "errors" => "Supplier Not Found"
+              "errors" => "Repo Not Found"
             ]);
         }
 
         return response()->json([
           "status" => "success",
-          "data" => $supplier
+          "data" => $repo
         ], 200);
     }
 
@@ -105,21 +92,22 @@ class SupplierController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $supplier = Supplier::find($id);
+        $repo = Repo::find($id);
 
-        if(! $supplier){
+        if(! $repo){
             return response()->json([
               "status" => "error",
-              "errors" => "Supplier Not Found"
+              "errors" => "Repo Not Found"
             ]);
         }
 
-        $supplier->update($request->all());
+        $repo->update($request->all());
 
         return response()->json([
           "status" => "success",
-          "data" => $supplier
+          "data" => $repo
         ], 200);
+
     }
 
     /**
@@ -130,22 +118,27 @@ class SupplierController extends Controller
      */
     public function destroy($id)
     {
-        $supplier = Supplier::find($id);
+        $repo = Repo::find($id);
         
-        if(! $supplier){
+        if(! $repo){
             return response()->json([
               "status" => "error",
-              "errors" => "Supplier Not Found"
+              "errors" => "Repo Not Found"
             ]);
 
         }
 
-        $supplier->delete();
+        $repo->delete();
 
         return response()->json([
           "status" => "success",
-          "message" => "Supplier deleted Successfully"
+          "message" => "Repo deleted Successfully"
         ]);
-
     }
 }
+
+
+
+
+
+

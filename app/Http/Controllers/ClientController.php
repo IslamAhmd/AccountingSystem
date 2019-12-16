@@ -39,7 +39,7 @@ class ClientController extends Controller
 
         $rules = [
             'type' => 'required',
-            'trade_name' => 'required',
+            'trade_name' => 'required|unique:clients',
             'first_name' => 'required',
             'last_name' => 'required',
             'mobile' => 'required|integer',
@@ -68,7 +68,7 @@ class ClientController extends Controller
             return response()->json([
               "status" => "error",
               "errors" => $validator->errors()
-            ], 400);
+            ]);
 
         }
 

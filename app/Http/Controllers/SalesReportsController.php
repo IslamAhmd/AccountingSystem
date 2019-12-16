@@ -37,7 +37,7 @@ class SalesReportsController extends Controller
             return response()->json([
               "status" => "error",
               "errors" => $validator->errors()
-            ], 400);
+            ]);
         }
 
         $sale = SalesReports::create($request->all());

@@ -37,7 +37,7 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'name' => 'required',
+            'name' => 'required|unique:employees',
             'mobile' => 'required|integer',
             'phone' => 'required|integer',
             'first_address' => 'required',
@@ -59,7 +59,7 @@ class EmployeeController extends Controller
             return response()->json([
               "status" => "error",
               "errors" => $validator->errors()
-            ], 400);
+            ]);
         }
 
         $employee = Employee::create($request->all());
