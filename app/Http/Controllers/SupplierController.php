@@ -139,6 +139,38 @@ class SupplierController extends Controller
             ]);
         }
 
+        $rules = [
+            'trade_name' => "required|unique:suppliers,trade_name,$id",
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'mobile' => 'required|integer',
+            'phone' => 'required|integer',
+            'first_address' => 'required',
+            'sec_address' => 'required',
+            'governorate' => 'required',
+            'postal_code' => 'required',
+            'country' => 'required',
+            'city' => 'required',
+            'currency' => 'required',
+            'balance' => 'required|integer',
+            'balance_date' => 'required|date',
+            'email' => "required|email|unique:suppliers,email,$id",
+            'notes' => 'required',
+            'supplier_num' => "required|integer|unique:suppliers,supplier_num,$id"
+        ];
+
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ]);
+
+        }
+
 
         $supplier->update($request->all());
 

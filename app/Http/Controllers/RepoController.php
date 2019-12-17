@@ -101,6 +101,26 @@ class RepoController extends Controller
             ]);
         }
 
+        $rules = [
+            'name' => 'required',
+            'location' => 'required',
+            'active' => 'boolean',
+            'primary' => 'boolean',
+            'show' => 'required',
+            'bill' => 'required',
+            'store' => 'required'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ]);
+        }
+
         $repo->update($request->all());
 
         return response()->json([

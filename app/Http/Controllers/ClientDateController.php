@@ -58,7 +58,8 @@ class ClientDateController extends Controller
           'duration' => $request->duration,
           'time' => $request->time,
           'action' => $request->action,
- 
+          'sharing' => $request->sharing,
+          'repeated' => $request->repeated,
           'client_name' => Client::where('id', $request->client_id)->first()->trade_name
         ]);
 
@@ -100,6 +101,30 @@ class ClientDateController extends Controller
             ]);
 
         }
+
+
+      $rules = [
+
+            'client_id' => 'required|integer',
+            'date' => 'required|date',
+            'duration' => 'required',
+            'time' => 'required',
+            'action' => 'required',
+            'sharing' => 'Boolean',
+            'repeated' => 'Boolean'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ]);
+
+        }
+        
     	$date->update($request->all());
 
         return response()->json([

@@ -122,6 +122,32 @@ class EmployeeController extends Controller
             ]);
         }
 
+        $rules = [
+            'name' => 'required|unique:employees,name,$id',
+            'mobile' => 'required|integer',
+            'phone' => 'required|integer',
+            'first_address' => 'required',
+            'sec_address' => 'required',
+            'governorate' => 'required',
+            'postal_code' => 'required|integer',
+            'country' => 'required',
+            'city' => 'required',
+            'language' => 'required',
+            'email' => 'required|email|unique:employees,email,$id',
+            'notes' => 'required',
+            'role_name' => 'required'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ]);
+        }
+
         $employee->update($request->all());
 
         return response()->json([

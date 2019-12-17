@@ -50,10 +50,10 @@ class ClientController extends Controller
             'postal_code' => 'required|integer',
             'country' => 'required',
             'city' => 'required|string',
-            'code_num' => 'required|integer',
+            'code_num' => 'required|integer|unique:clients',
             'billingmethod' => 'required',
             'currency' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:clients',
             'category' => 'required',
             'notes' => 'required',
             'language' => 'required',
@@ -126,6 +126,41 @@ class ClientController extends Controller
             return response()->json([
               "status" => "error",
               "errors" => "Client Not Found"
+            ]);
+
+        }
+
+        $rules = [
+            'type' => 'required',
+            'trade_name' => "required|unique:clients,trade_name,$id",
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'mobile' => 'required|integer',
+            'phone' => 'required|integer',
+            'first_address' => 'required',
+            'sec_address' => 'required',
+            'governorate' => 'required',
+            'postal_code' => 'required|integer',
+            'country' => 'required',
+            'city' => 'required|string',
+            'code_num' => "required|integer|unique:clients,code_num,$id",
+            'billingmethod' => 'required',
+            'currency' => 'required',
+            'email' => "required|email|unique:clients,email,$id",
+            'category' => 'required',
+            'notes' => 'required',
+            'language' => 'required',
+            'prices' => 'required',
+            'send_data' => 'Boolean',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
             ]);
 
         }
