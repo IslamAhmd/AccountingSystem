@@ -172,7 +172,26 @@ class SupplierController extends Controller
         }
 
 
-        $supplier->update($request->all());
+        $supplier->update([
+            'trade_name' => $request->trade_name,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'mobile' => $request->mobile,
+            'phone' => $request->phone,
+            'first_address' => $request->first_address,
+            'sec_address' => $request->sec_address,
+            'governorate' => $request->governorate,
+            'postal_code' => $request->postal_code,
+            'country' => $request->country,
+            'city' => $request->city,
+            'currency' => $request->currency,
+            'balance' => $request->balance,
+            'balance_date' => $request->balance_date,
+            'email' => $request->email,
+            'notes' => $request->notes,
+            'supplier_num' => $request->supplier_num,
+            'emp_name' => Auth()->user()->name
+        ]);
 
         return response()->json([
           "status" => "success",

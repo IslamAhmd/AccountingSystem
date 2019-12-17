@@ -15,7 +15,7 @@ class RepoController extends Controller
      */
     public function index()
     {
-        $repos = Repo::paginate(5);
+        $repos = Repo::get();
 
         return response()->json([
           "status" => "success",

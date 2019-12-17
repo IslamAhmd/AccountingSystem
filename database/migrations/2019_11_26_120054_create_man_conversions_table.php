@@ -17,13 +17,13 @@ class CreateManConversionsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('from_repo');
             $table->unsignedBigInteger('to_repo');
-            $table->unsignedBigInteger('purchase_id');
+            $table->unsignedBigInteger('purchase_num');
             $table->text('notes');
             $table->timestamps();
 
             $table->foreign('from_repo')->references('id')->on('repos')->onDelete('cascade');
             $table->foreign('to_repo')->references('id')->on('repos')->onDelete('cascade');
-            $table->foreign('purchase_id')->references('purchase_id')->on('purchases')->onDelete('cascade');
+            $table->foreign('purchase_num')->references('purchase_num')->on('purchases')->onDelete('cascade');
         });
     }
 

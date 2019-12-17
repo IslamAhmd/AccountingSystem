@@ -64,7 +64,6 @@ class EmployeeController extends Controller
 
         $employee = Employee::create($request->all());
 
-        // return $employee->id;
 
         $user = User::create([
             "name" => $employee->name,

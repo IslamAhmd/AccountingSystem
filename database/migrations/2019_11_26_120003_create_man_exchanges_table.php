@@ -16,12 +16,13 @@ class CreateManExchangesTable extends Migration
         Schema::create('man_exchanges', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('repo_id');
-            $table->unsignedBigInteger('purchase_id');
+            $table->unsignedBigInteger('purchase_num');
             $table->text('notes');
             $table->timestamps();
 
             $table->foreign('repo_id')->references('id')->on('repos')->onDelete('cascade');
-            $table->foreign('purchase_id')->references('purchase_id')->on('purchases')->onDelete('cascade');
+            $table->foreign('purchase_num')->references('purchase_num')->on('purchases')->onDelete('cascade');
+            
         });
     }
 

@@ -102,7 +102,6 @@ class ClientDateController extends Controller
 
         }
 
-
       $rules = [
 
             'client_id' => 'required|integer',
@@ -125,7 +124,16 @@ class ClientDateController extends Controller
 
         }
         
-    	$date->update($request->all());
+    	$date->update([
+          'client_id' => $request->client_id,
+          'date' => $request->date,
+          'duration' => $request->duration,
+          'time' => $request->time,
+          'action' => $request->action,
+          'sharing' => $request->sharing,
+          'repeated' => $request->repeated,
+          'client_name' => Client::where('id', $request->client_id)->first()->trade_name
+        ]);
 
         return response()->json([
           "status" => "success",
