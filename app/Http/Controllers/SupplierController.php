@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Supplier;
 use Validator;
 
@@ -32,6 +33,7 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
+
         $rules = [
             'trade_name' => 'required|unique:suppliers',
             'first_name' => 'required',
@@ -49,7 +51,9 @@ class SupplierController extends Controller
             'balance_date' => 'required|date',
             'email' => 'required|email|unique:suppliers',
             'notes' => 'required',
+            'supplier_num' => 'required|integer|unique:suppliers'
         ];
+
 
         $validator = Validator::make($request->all(), $rules);
 
@@ -62,7 +66,28 @@ class SupplierController extends Controller
 
         }
 
-        $supplier = Supplier::create($request->all());
+        $supplier = Supplier::create([
+            'trade_name' => $request->trade_name,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'mobile' => $request->mobile,
+            'phone' => $request->phone,
+            'first_address' => $request->first_address,
+            'sec_address' => $request->sec_address,
+            'governorate' => $request->governorate,
+            'postal_code' => $request->postal_code,
+            'country' => $request->country,
+            'city' => $request->city,
+            'currency' => $request->currency,
+            'balance' => $request->balance,
+            'balance_date' => $request->balance_date,
+            'email' => $request->email,
+            'notes' => $request->notes,
+            'supplier_num' => $request->supplier_num,
+            'emp_name' => Auth()->user()->name
+        ]);
+
+        // $supplier->emp_name = Auth()->user()->name;
 
         return response()->json([
           "status" => "success",
@@ -113,6 +138,7 @@ class SupplierController extends Controller
               "errors" => "Supplier Not Found"
             ]);
         }
+
 
         $supplier->update($request->all());
 

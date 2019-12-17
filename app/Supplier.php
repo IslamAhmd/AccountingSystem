@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+
 
 class Supplier extends Model
 {
@@ -12,4 +14,5 @@ class Supplier extends Model
     	
     	$this->attributes['balance_date'] = date('Y/m/d', strtotime($value));
     }
+
 }

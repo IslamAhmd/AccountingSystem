@@ -29,6 +29,8 @@ class CreateSuppliersTable extends Migration
             $table->string('country');
             $table->string('commercial_register')->default('0');
             $table->string('tax_record')->default('0');
+            $table->unsignedBigInteger('supplier_num')->unique();
+            $table->string('emp_name');
             $table->string('currency');
             $table->unsignedBigInteger('balance');
             $table->date('balance_date');
