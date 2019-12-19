@@ -16,6 +16,7 @@ class CreateManAdditionsTable extends Migration
         Schema::create('man_additions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('repo_id');
+            $table->string('repo_name');
             $table->unsignedBigInteger('purchase_num');
             $table->text('notes');
             $table->timestamps();

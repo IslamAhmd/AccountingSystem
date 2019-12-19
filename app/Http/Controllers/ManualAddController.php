@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\ManAddition;
 use App\Repo;
 use Validator;
 
-use Illuminate\Http\Request;
 
-class RepoController extends Controller
+class ManualAddController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,13 +17,14 @@ class RepoController extends Controller
      */
     public function index()
     {
-        $repos = Repo::get();
+        $adds = ManAddition::get();
 
         return response()->json([
           "status" => "success",
-          "data" => $repos
+          "data" => $adds
         ], 200);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -32,13 +35,9 @@ class RepoController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'name' => 'required|unique:repos',
-            'location' => 'required',
-            'active' => 'boolean',
-            'primary' => 'boolean',
-            'show' => 'required',
-            'bill' => 'required',
-            'store' => 'required'
+            'repo_id' => 'required|integer',
+            'purchase_num' => 'required|integer',
+            'notes' => 'required'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -49,13 +48,19 @@ class RepoController extends Controller
               "status" => "error",
               "errors" => $validator->errors()
             ]);
+
         }
 
-        $repo = Repo::create($request->all());
+        $add = ManAddition::create([
+            'repo_id' => $request->repo_id,
+            'repo_name' => Repo::where('id', $request->repo_id)->first()->name,
+            'purchase_num' => $request->purchase_num,
+            'notes' => $request->notes
+        ]);
 
         return response()->json([
           "status" => "success",
-          "data" => $repo
+          "data" => $add
         ], 201);
     }
 
@@ -67,21 +72,21 @@ class RepoController extends Controller
      */
     public function show($id)
     {
-        $repo = Repo::find($id);
-
-        if(! $repo){
+        $add = ManAddition::find($id);
+        if(! $add){
             return response()->json([
               "status" => "error",
-              "errors" => "Repo Not Found"
+              "errors" => "Addition Not Found"
             ]);
+
         }
 
         return response()->json([
           "status" => "success",
-          "data" => $repo
+          "data" => $add
         ], 200);
-    }
 
+    }
 
     /**
      * Update the specified resource in storage.
@@ -92,23 +97,20 @@ class RepoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $repo = Repo::find($id);
+        $add = ManAddition::find($id);
 
-        if(! $repo){
+        if(! $add){
             return response()->json([
               "status" => "error",
-              "errors" => "Repo Not Found"
+              "errors" => "Addition Not Found"
             ]);
+
         }
 
         $rules = [
-            'name' => "required|unique:repos,name,$id",
-            'location' => 'required',
-            'active' => 'boolean',
-            'primary' => 'boolean',
-            'show' => 'required',
-            'bill' => 'required',
-            'store' => 'required'
+            'repo_id' => 'required|integer',
+            'purchase_num' => 'required|integer',
+            'notes' => 'required'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -119,15 +121,20 @@ class RepoController extends Controller
               "status" => "error",
               "errors" => $validator->errors()
             ]);
+
         }
 
-        $repo->update($request->all());
+        $add->update([
+            'repo_id' => $request->repo_id,
+            'repo_name' => Repo::where('id', $request->repo_id)->first()->name,
+            'purchase_num' => $request->purchase_num,
+            'notes' => $request->notes
+        ]);
 
         return response()->json([
           "status" => "success",
-          "data" => $repo
+          "data" => $add
         ], 200);
-
     }
 
     /**
@@ -138,27 +145,21 @@ class RepoController extends Controller
      */
     public function destroy($id)
     {
-        $repo = Repo::find($id);
-        
-        if(! $repo){
+        $add = ManAddition::find($id);
+
+        if(! $add){
             return response()->json([
               "status" => "error",
-              "errors" => "Repo Not Found"
+              "errors" => "Addition Not Found"
             ]);
 
         }
 
-        $repo->delete();
+        $add->delete();
 
         return response()->json([
           "status" => "success",
-          "message" => "Repo deleted Successfully"
+          "message" => "Addition deleted Successfully"
         ]);
     }
 }
-
-
-
-
-
-

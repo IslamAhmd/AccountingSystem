@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Repo;
-use Validator;
 
 use Illuminate\Http\Request;
+use App\ManConversion;
+use Validator;
+use App\Repo;
 
-class RepoController extends Controller
+class ManualConversionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,11 +16,11 @@ class RepoController extends Controller
      */
     public function index()
     {
-        $repos = Repo::get();
+        $convs = ManConversion::get();
 
         return response()->json([
           "status" => "success",
-          "data" => $repos
+          "data" => $convs
         ], 200);
     }
 
@@ -32,13 +33,10 @@ class RepoController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'name' => 'required|unique:repos',
-            'location' => 'required',
-            'active' => 'boolean',
-            'primary' => 'boolean',
-            'show' => 'required',
-            'bill' => 'required',
-            'store' => 'required'
+            'from_repo_id' => 'required|integer',
+            'to_repo_id' => 'required|integer',
+            'purchase_num' => 'required|integer',
+            'notes' => 'required'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -49,13 +47,21 @@ class RepoController extends Controller
               "status" => "error",
               "errors" => $validator->errors()
             ]);
+
         }
 
-        $repo = Repo::create($request->all());
+        $conv = ManConversion::create([
+            'from_repo_id' => $request->from_repo_id,
+            'to_repo_id' => $request->to_repo_id,
+            'from_repo_name' => Repo::where('id', $request->from_repo_id)->first()->name,
+            'to_repo_name' => Repo::where('id', $request->to_repo_id)->first()->name,
+            'purchase_num' => $request->purchase_num,
+            'notes' => $request->notes
+        ]);
 
         return response()->json([
           "status" => "success",
-          "data" => $repo
+          "data" => $conv
         ], 201);
     }
 
@@ -67,21 +73,20 @@ class RepoController extends Controller
      */
     public function show($id)
     {
-        $repo = Repo::find($id);
-
-        if(! $repo){
+        $conv = ManConversion::find($id);
+        if(! $conv){
             return response()->json([
               "status" => "error",
-              "errors" => "Repo Not Found"
+              "errors" => "Convertion Not Found"
             ]);
+
         }
 
         return response()->json([
           "status" => "success",
-          "data" => $repo
+          "data" => $conv
         ], 200);
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -92,23 +97,21 @@ class RepoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $repo = Repo::find($id);
+        $conv = ManConversion::find($id);
 
-        if(! $repo){
+        if(! $conv){
             return response()->json([
               "status" => "error",
-              "errors" => "Repo Not Found"
+              "errors" => "Convertion Not Found"
             ]);
+
         }
 
         $rules = [
-            'name' => "required|unique:repos,name,$id",
-            'location' => 'required',
-            'active' => 'boolean',
-            'primary' => 'boolean',
-            'show' => 'required',
-            'bill' => 'required',
-            'store' => 'required'
+            'from_repo_id' => 'required|integer',
+            'to_repo_id' => 'required|integer',
+            'purchase_num' => 'required|integer',
+            'notes' => 'required'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -119,15 +122,22 @@ class RepoController extends Controller
               "status" => "error",
               "errors" => $validator->errors()
             ]);
+
         }
 
-        $repo->update($request->all());
+        $conv->update([
+            'from_repo_id' => $request->from_repo_id,
+            'to_repo_id' => $request->to_repo_id,
+            'from_repo_name' => Repo::where('id', $request->from_repo_id)->first()->name,
+            'to_repo_name' => Repo::where('id', $request->to_repo_id)->first()->name,
+            'purchase_num' => $request->purchase_num,
+            'notes' => $request->notes
+        ]);
 
         return response()->json([
           "status" => "success",
-          "data" => $repo
+          "data" => $conv
         ], 200);
-
     }
 
     /**
@@ -138,27 +148,22 @@ class RepoController extends Controller
      */
     public function destroy($id)
     {
-        $repo = Repo::find($id);
-        
-        if(! $repo){
+        $conv = ManConversion::find($id);
+
+        if(! $conv){
             return response()->json([
               "status" => "error",
-              "errors" => "Repo Not Found"
+              "errors" => "Convertion Not Found"
             ]);
 
         }
 
-        $repo->delete();
+        $conv->delete();
 
         return response()->json([
           "status" => "success",
-          "message" => "Repo deleted Successfully"
+          "message" => "Convertion deleted Successfully"
         ]);
+
     }
 }
-
-
-
-
-
-

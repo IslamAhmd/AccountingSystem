@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class ManExchange extends Model
 {
-    //
+    protected $guarded = [];
 }

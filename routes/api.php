@@ -50,5 +50,20 @@ Route::group(['middleware' => ['jwt.verify']], function(){
     Route::apiResource('repo', 'RepoController')->except(['create', 'edit']);
     // Purchase
     Route::apiResource('purchase', 'PurchaseController')->except(['create', 'edit']);
+    // Products
+    Route::apiResource('product', 'ProductController')->only(['index', 'store']);
+    // Services
+    Route::apiResource('service', 'ServiceController')->only(['index', 'store']);
+    // add inventory
+    Route::post('inventory', 'InventoryController@store');
+    // Manual Addition
+    Route::apiResource('addition', 'ManualAddController')->except(['create', 'edit']);
+    // Manual Exchange
+    Route::apiResource('exchange', 'ManualExchangeController')->except(['create', 'edit']);
+    // Manual Conversion
+    Route::apiResource('conversion', 'ManualConversionController')->except(['create', 'edit']);
+    // Bills
+    Route::apiResource('bill', 'BillController')->except(['create', 'edit']);
+
 
 });

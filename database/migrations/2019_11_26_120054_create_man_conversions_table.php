@@ -15,14 +15,16 @@ class CreateManConversionsTable extends Migration
     {
         Schema::create('man_conversions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('from_repo');
-            $table->unsignedBigInteger('to_repo');
+            $table->unsignedBigInteger('from_repo_id');
+            $table->string('from_repo_name');
+            $table->unsignedBigInteger('to_repo_id');
+            $table->string('to_repo_name');
             $table->unsignedBigInteger('purchase_num');
             $table->text('notes');
             $table->timestamps();
 
-            $table->foreign('from_repo')->references('id')->on('repos')->onDelete('cascade');
-            $table->foreign('to_repo')->references('id')->on('repos')->onDelete('cascade');
+            $table->foreign('from_repo_id')->references('id')->on('repos')->onDelete('cascade');
+            $table->foreign('to_repo_id')->references('id')->on('repos')->onDelete('cascade');
             $table->foreign('purchase_num')->references('purchase_num')->on('purchases')->onDelete('cascade');
         });
     }

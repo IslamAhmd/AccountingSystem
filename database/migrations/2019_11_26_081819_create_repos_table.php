@@ -15,7 +15,7 @@ class CreateReposTable extends Migration
     {
         Schema::create('repos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('location');
             $table->boolean('active')->default('0');
             $table->boolean('primary')->default('0');
