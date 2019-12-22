@@ -29,6 +29,7 @@ class ImportController extends Controller
     public function store(Request $request){
 
     	$rules = [
+
     		'name' => 'required|string',
     		'import_num' => 'required|integer',
     		'starts_at' => 'required|date',
@@ -46,7 +47,8 @@ class ImportController extends Controller
     		'abstract_num' => 'required|integer',
     		'shipment_location' => 'required',
     		'doc_credit_num' => 'required|integer',
-    		'gurantee_letter_num' => 'required|integer'
+    		'gurantee_letter_num' => 'required|integer',
+            'employee' => 'boolean'
     	];
 
 

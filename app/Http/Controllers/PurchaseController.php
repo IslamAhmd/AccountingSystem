@@ -41,8 +41,10 @@ class PurchaseController extends Controller
             'discount_type' => 'required',
             'payment' => 'required|integer',
             'payment_type' => 'required',
-            'paymeny_check' => 'required|boolean',
-            'received' => 'required|boolean'
+            'paymeny_check' => 'boolean',
+            'pay_way' => 'required_if:paymeny_check,1',
+            'pay_id' => 'required_if:paymeny_check,1',
+            'received' => 'boolean'
 
         ];
 
@@ -132,8 +134,10 @@ class PurchaseController extends Controller
             'discount_type' => 'required',
             'payment' => 'required|integer',
             'payment_type' => 'required',
-            'paymeny_check' => 'required|boolean',
-            'received' => 'required|boolean'
+            'paymeny_check' => 'boolean',
+            'pay_way' => 'required_if:paymeny_check,1',
+            'pay_id' => 'required_if:paymeny_check,1',
+            'received' => 'boolean'
 
         ];
 

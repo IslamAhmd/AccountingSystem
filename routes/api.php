@@ -64,6 +64,12 @@ Route::group(['middleware' => ['jwt.verify']], function(){
     Route::apiResource('conversion', 'ManualConversionController')->except(['create', 'edit']);
     // Bills
     Route::apiResource('bill', 'BillController')->except(['create', 'edit']);
+    // prices
+    Route::apiResource('price', 'PriceController')->except(['create', 'edit']);
+    // Credits
+    Route::apiResource('credit', 'CreditController')->except(['create', 'edit']);
+
+
 
 
 });

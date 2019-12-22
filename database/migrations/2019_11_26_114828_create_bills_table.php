@@ -29,7 +29,7 @@ class CreateBillsTable extends Migration
             $table->unsignedBigInteger('payment');
             $table->string('payment_type');
             $table->string('file');
-            $table->boolean('paid');
+            $table->boolean('paid')->default(0);
             $table->unsignedBigInteger('shipment_costs');
             $table->unsignedBigInteger('repo_id');
             $table->string('repo_name');

@@ -45,8 +45,8 @@ class ServiceController extends Controller
             'barcode' => 'required|unique:services',
             'category' => 'required',
             'notes' => 'required',
-            'repo' => 'required|boolean',
-            'disabled' => 'required|boolean',
+            'repo' => 'boolean',
+            'disabled' => 'boolean',
             'repo_quantity' => 'required|integer',
             'least_quantity' => 'required|integer'
             

@@ -21,6 +21,7 @@ class InventoryController extends Controller
             'payment' => 'required|integer',
             'payment_type' => 'required',
     	];
+        
 
     	$validator = Validator::make($request->all(), $rules);
 
