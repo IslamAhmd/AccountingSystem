@@ -26,6 +26,8 @@ Route::group(['middleware' => ['jwt.verify']], function(){
 
 	// client
     Route::apiResource('client', 'ClientController')->except(['create', 'edit']);
+    // get client's id and name
+    Route::get('clients', 'ClientController@getClients');
     // set roles and permissions
     Route::apiResource('role', 'RolesController')->except(['create', 'edit', 'show']);
     // set dates with clients

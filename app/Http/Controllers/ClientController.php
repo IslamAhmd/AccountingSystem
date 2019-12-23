@@ -217,4 +217,17 @@ class ClientController extends Controller
     }
 
 
+    public function getClients(){
+
+      $clients = Client::select('id', 'first_name', 'last_name')->get();
+
+      return response()->json([
+          "status" => "success",
+          "data" => $clients
+      ], 200);
+
+
+    }
+
+
 }
