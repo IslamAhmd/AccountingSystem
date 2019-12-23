@@ -198,6 +198,9 @@ class CreditController extends Controller
 
         }
 
+
+        $path = public_path() . "/images/credits/" . $credit->file;
+        unlink($path);
         $credit->delete();
 
         return response()->json([

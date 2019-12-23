@@ -159,8 +159,10 @@ class PriceController extends Controller
         $price->discount = $request->discount;
         $price->discount_type = $request->discount_type;
         if($request->hasFile('file')){
+
             $path = public_path() . "/images/prices/" . $price->file;
             unlink($path);
+
             $photo = $request->file('file');
             $file_name = time() . '-' . $photo->getClientOriginalName();
             $location = public_path('images/prices/' . $file_name);
@@ -201,6 +203,8 @@ class PriceController extends Controller
 
         }
 
+        $path = public_path() . "/images/prices/" . $price->file;
+        unlink($path);
         $price->delete();
 
         return response()->json([

@@ -151,7 +151,7 @@ class PeriodicBillController extends Controller
         }
 
         $rules = [
-            'subscription' => "required|unique:periodic_bills, subscription, $id",
+            'subscription' => "required|unique:periodic_bills,subscription,$id",
             'release_bill' => 'required|integer',
             'release_bill_type' => 'required',
             'repeat_num' => 'required|integer',
@@ -240,7 +240,10 @@ class PeriodicBillController extends Controller
 
         }
 
+        $path = public_path() . "/images/PeriodicBills/" . $periodic->file;
+        unlink($path);
         $periodic->delete();
+
 
         return response()->json([
           "status" => "success",
