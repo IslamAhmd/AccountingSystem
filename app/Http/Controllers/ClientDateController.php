@@ -23,7 +23,7 @@ class ClientDateController extends Controller
     	return response()->json([
           "status" => "success",
           "data" => $dates
-        ], 200);
+      ], 200);
 
     }
 

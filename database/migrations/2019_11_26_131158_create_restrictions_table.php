@@ -17,7 +17,7 @@ class CreateRestrictionsTable extends Migration
             $table->bigIncrements('id');
             $table->date('date');
             $table->string('currency');
-            $table->unsignedBigInteger('number');
+            $table->unsignedBigInteger('restriction_num');
             $table->text('desc');
             $table->timestamps();
         });

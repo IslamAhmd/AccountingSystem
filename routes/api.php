@@ -72,7 +72,10 @@ Route::group(['middleware' => ['jwt.verify']], function(){
     Route::apiResource('credit', 'CreditController')->except(['create', 'edit']);
     // Periodic Bills
     Route::apiResource('periodic', 'PeriodicBillController')->except(['create', 'edit']);
-
+    // Receipts
+    Route::apiResource('receipt', 'ReceiptsController')->except(['create', 'edit']);
+    // Catch Receipts
+    Route::apiResource('catchreceipt', 'CatchReceiptsController')->except(['create', 'edit']);
 
 
 

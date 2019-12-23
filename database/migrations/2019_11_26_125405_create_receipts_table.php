@@ -15,13 +15,19 @@ class CreateReceiptsTable extends Migration
     {
         Schema::create('receipts', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->double('amount');
+            $table->unsignedBigInteger('amount');
             $table->string('type');
             $table->text('desc');
-            $table->string('img');
-            $table->unsignedBigInteger('code');
+            $table->string('file');
+            $table->unsignedBigInteger('code_num')->unique();
             $table->date('date');
+            $table->unsignedBigInteger('employee_id');
+            $table->string('employee_name');
+            $table->string('category');
+
             $table->timestamps();
+
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
         });
     }
 

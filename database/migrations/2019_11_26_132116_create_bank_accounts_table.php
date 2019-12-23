@@ -17,6 +17,8 @@ class CreateBankAccountsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name')->unique();
             $table->text('desc');
+            $table->unsignedBigInteger('payment');
+            $table->unsignedBigInteger('withdraw');
             $table->timestamps();
         });
     }
