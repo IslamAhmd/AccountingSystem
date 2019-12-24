@@ -6,6 +6,7 @@ use JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Employee;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -14,6 +15,17 @@ class UserController extends Controller
         {
             $credentials = $request->only('email', 'password');
             $user = Employee::where('email', $request->email)->first();
+            if(! $user){
+                return response()->json([
+                "status" => "error",
+                'error' => "User doesn't exist"
+                 ]);
+            }
+
+            $user->update([
+                'last_login_at' => Carbon::now()->toDateTimeString()
+            ]);
+
 
 
             if (Auth::attempt($credentials)) {
