@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRestrictionsTable extends Migration
+
+class CreateAccountsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +14,13 @@ class CreateRestrictionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('restrictions', function (Blueprint $table) {
+        Schema::create('accounts', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->date('date');
-            $table->string('currency');
-            $table->unsignedBigInteger('restriction_num')->unique();
-            $table->text('desc');
+            $table->string('type');
+            $table->unsignedBigInteger('code_num')->unique();
+            $table->string('name')->unique();
+            $table->string('account');
+            $table->string('genre');
             $table->timestamps();
         });
     }
@@ -30,6 +32,6 @@ class CreateRestrictionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('restrictions');
+        Schema::dropIfExists('accounts');
     }
 }
