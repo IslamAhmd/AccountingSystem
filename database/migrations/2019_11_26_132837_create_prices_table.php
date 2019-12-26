@@ -15,21 +15,16 @@ class CreatePricesTable extends Migration
     {
         Schema::create('prices', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('client_id');
-            $table->string('client_name');
-            $table->string('way');
-            $table->unsignedBigInteger('price_num')->unique();
+            // $table->unsignedBigInteger('client_id');
+            // $table->string('client_name');
+            $table->string('method');
             $table->date('price_date');
             $table->unsignedBigInteger('discount');
             $table->string('discount_type');
-            $table->string('file');
             $table->unsignedBigInteger('shipment_costs');
-            $table->unsignedBigInteger('repo_id');
-            $table->string('repo_name');
             $table->timestamps();
 
-            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
-            $table->foreign('repo_id')->references('id')->on('repos')->onDelete('cascade');
+            // $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
 
         });
     }

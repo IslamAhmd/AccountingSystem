@@ -39,26 +39,37 @@ class ClientController extends Controller
 
         $rules = [
             'type' => 'required',
-            'trade_name' => 'required|unique:clients',
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'trade_name' => 'required_if:type,business|unique:clients',
+            'full_name' => 'required_if:type,individual|unique:clients',
+            'first_name' => 'required_if:type,business',
+            'last_name' => 'required_if:type,business',
             'mobile' => 'required|integer',
-            'phone' => 'required|integer',
+            'telephone' => 'required|integer',
             'first_address' => 'required',
             'sec_address' => 'required',
-            'governorate' => 'required',
+            'state' => 'required',
             'postal_code' => 'required|integer',
             'country' => 'required',
-            'city' => 'required|string',
+            'city' => 'required',
+            'tax_record' => 'integer',
+            'secondary_address' => 'Boolean',
+            'secondary_address1' => 'required_if:secondary_address,1',
+            'secondary_address2' => 'required_if:secondary_address,1',
+            'sec_city' => 'required_if:secondary_address,1',
+            'sec_state' => 'required_if:secondary_address,1',
+            'sec_country' => 'required_if:secondary_address,1',
+            'sec_postal_code' => 'required_if:secondary_address,1|integer',
             'code_num' => 'required|integer|unique:clients',
-            'billingmethod' => 'required',
+            'invoicing_method' => 'required',
             'currency' => 'required',
             'email' => 'required|email|unique:clients',
             'category' => 'required',
             'notes' => 'required',
             'language' => 'required',
-            'prices' => 'required',
-            'send_data' => 'Boolean',
+            'price' => 'required',
+            'contact_email' => 'email|unique:clients',
+            'contact_telephone' => 'integer',
+            'contact_mobile' => 'integer'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -72,7 +83,37 @@ class ClientController extends Controller
 
         }
 
-        $client = Client::create($request->all());
+        $client = Client::create([
+          'type' => $request->type,
+          'trade_name' => $request->trade_name,
+          'full_name' => $request->full_name,
+          'first_name' => $request->first_name,
+          'last_name' => $request->last_name,
+          'mobile' => $request->mobile,
+          'telephone' => $request->telephone,
+          'first_address' => $request->first_address,
+          'sec_address' => $request->sec_address,
+          'state' => $request->state,
+          'postal_code' => $request->postal_code,
+          'country' => $request->country,
+          'city' => $request->city,
+          'tax_record' => $request->tax_record,
+          'cr' => $request->cr,
+          'secondary_address' => $request->secondary_address,
+          'secondary_address1' => $request->secondary_address1,
+          'secondary_address2' => $request->secondary_address2,
+          'sec_city' => $request->sec_city,
+          'sec_state' => $request->sec_state,
+          'sec_country' => $request->sec_country,
+          'sec_postal_code' => $request->sec_postal_code,
+          'code_num' => $request->code_num,
+          'invoicing_method' => $request->invoicing_method,
+          'currency' => $request->currency,
+          'email' => $request->email,
+          'category' => $request->category,
+          'notes' => $request->notes,
+          'language' => $request->language
+        ]);
 
         return response()->json([
           "status" => "success",
