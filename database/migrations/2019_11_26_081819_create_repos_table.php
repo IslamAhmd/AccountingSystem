@@ -30,13 +30,13 @@ class CreateReposTable extends Migration
             $table->string('store_role_name')->nullable();
             $table->timestamps();
 
-            $table->foreign('show_emp_name')->references('name')->on('employees')->onDelete('cascade');
-            $table->foreign('bill_emp_name')->references('name')->on('employees')->onDelete('cascade');
-            $table->foreign('store_emp_name')->references('name')->on('employees')->onDelete('cascade');
+            $table->foreign('show_emp_name')->references('name')->on('employees')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('bill_emp_name')->references('name')->on('employees')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('store_emp_name')->references('name')->on('employees')->onDelete('cascade')->onUpdate('cascade');
 
-            $table->foreign('show_role_name')->references('name')->on('roles')->onDelete('cascade');
-            $table->foreign('bill_role_name')->references('name')->on('roles')->onDelete('cascade');
-            $table->foreign('store_role_name')->references('name')->on('roles')->onDelete('cascade');
+            $table->foreign('show_role_name')->references('name')->on('roles')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('bill_role_name')->references('name')->on('roles')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('store_role_name')->references('name')->on('roles')->onDelete('cascade')->onUpdate('cascade');
 
 
 

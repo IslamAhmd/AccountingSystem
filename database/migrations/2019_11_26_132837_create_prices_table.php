@@ -17,6 +17,7 @@ class CreatePricesTable extends Migration
             $table->bigIncrements('id');
             // $table->unsignedBigInteger('client_id');
             // $table->string('client_name');
+            $table->string('name')->unique();
             $table->string('method');
             $table->date('price_date');
             $table->unsignedBigInteger('discount');

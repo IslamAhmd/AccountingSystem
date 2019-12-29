@@ -17,12 +17,12 @@ class CreateManAdditionsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('repo_id');
             $table->string('repo_name');
-            $table->unsignedBigInteger('purchase_num');
+            $table->unsignedBigInteger('purchase_id');
             $table->text('notes');
             $table->timestamps();
 
             $table->foreign('repo_id')->references('id')->on('repos')->onDelete('cascade');
-            $table->foreign('purchase_num')->references('purchase_num')->on('purchases')->onDelete('cascade');
+            $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('cascade');
         });
     }
 

@@ -88,14 +88,14 @@ class RolesController extends Controller
 
         // return permissions ids in array
         $permission_id = PermissionRole::where('role_id', $role->id)->get()->pluck('permission_id');
-    //     // return $permission_id;
+         // return $permission_id;
        
 
-    //    // return permissions names in array
+       // return permissions names in array
         $permission_name = Permission::find($permission_id, ['permission']);
 
 
-    //     // return $permission_name;
+     // return $permission_name;
 
         return response()->json([
             "status" => "success",

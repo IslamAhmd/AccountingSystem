@@ -44,8 +44,10 @@ class CreateClientsTable extends Migration
             $table->string('category');
             $table->text('notes');
             $table->string('language');
-            // $table->string('price_id');
+            // $table->unsignedBigInteger('price_id');
+            // $table->string('price_name');
             $table->timestamps();
+
         });
     }
 

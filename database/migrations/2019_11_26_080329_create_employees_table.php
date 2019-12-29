@@ -32,7 +32,7 @@ class CreateEmployeesTable extends Migration
             $table->boolean('active')->nullable();
 			$table->timestamps();
 			
-            $table->foreign('role_name')->references('name')->on('roles')->onDelete('cascade');
+            $table->foreign('role_name')->references('name')->on('roles')->onDelete('cascade')->onUpdate('cascade');
 
 
         });
