@@ -8,37 +8,51 @@ use App\ClientPrice;
 use App\Price;
 use Illuminate\Http\Request;
 use Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use App\Bill;
 
 
 class ClientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+     
 
-    // ادارة الاعملاء 
+
+
     public function index()
     {
 
 
         $clients = Client::get();
 
+        $clients_id = $clients->pluck('id');
+
+      // return $clients_id;
+        
+        $clientscontacts = ClientContact::whereIn('client_id', $clients_id)->get();
+      
+        
+        $clientprices = ClientPrice::whereIn('client_id', $clients_id)->select(['price_id', 'price_name'])->get();
+
         return response()->json([
           "status" => "success",
-          "data" => $clients
+          "data" => [
+
+            'client' => $clients,
+            'clientcontact' => $clientscontacts,
+            'clientprice' => $clientprices
+
+          ]
         ], 200);
+
     }
 
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
+
     public function store(Request $request){
+
+        $price = new Price;
 
         $rules = [
             'type' => 'required',
@@ -46,15 +60,7 @@ class ClientController extends Controller
             'full_name' => 'required_if:type,individual|unique:clients',
             'first_name' => 'required_if:type,business',
             'last_name' => 'required_if:type,business',
-            'mobile' => 'required|integer',
-            'telephone' => 'required|integer',
-            'first_address' => 'required',
-            'sec_address' => 'required',
-            'state' => 'required',
-            'postal_code' => 'required|integer',
-            'country' => 'required',
-            'city' => 'required',
-            'tax_record' => 'integer',
+            'postal_code' => 'integer',
             'secondary_address' => 'Boolean',
             'secondary_address1' => 'required_if:secondary_address,1',
             'secondary_address2' => 'required_if:secondary_address,1',
@@ -63,16 +69,17 @@ class ClientController extends Controller
             'sec_country' => 'required_if:secondary_address,1',
             'sec_postal_code' => 'required_if:secondary_address,1|integer',
             'code_num' => 'required|integer|unique:clients',
-            'invoicing_method' => 'required',
-            'currency' => 'required',
             'email' => 'required|email|unique:clients',
-            'category' => 'required',
-            'notes' => 'required',
-            'language' => 'required',
-            'price_id' => 'required',
-            'contact_email' => 'email|unique:clients',
-            'contact_telephone' => 'integer',
-            'contact_mobile' => 'integer'
+            'contacts.*.contact_email' => 'email',
+            'contacts.*.contact_telephone' => 'integer',
+            'contacts.*.contact_mobile' => 'integer',
+            'send_data' => 'Boolean|required_if:invoicing_method,send via email',
+            'price_id' => [
+
+              Rule::exists($price->getTable(),$price->getKeyName()),
+
+            ],    
+
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -86,6 +93,8 @@ class ClientController extends Controller
 
         }
 
+
+        // create client 
         $client = Client::create([
           'type' => $request->type,
           'trade_name' => $request->trade_name,
@@ -115,13 +124,15 @@ class ClientController extends Controller
           'email' => $request->email,
           'category' => $request->category,
           'notes' => $request->notes,
-          'language' => $request->language
+          'language' => $request->language,
+          'send_data' => $request->send_data,
+          'employee_id' => Auth::id(),
+          'tag' => $request->tag
         ]);
 
-
+        // create client contacts
         $contacts = $request->contacts;
-
-        foreach ($contacts as $contact) {
+        foreach ((array) $contacts as $contact) {
 
           ClientContact::create([
 
@@ -135,27 +146,37 @@ class ClientController extends Controller
 
         }
 
+        // get client name based on his type
         $type = $client->type;
-
         switch($type){
           case "business": 
-            $clientName = Client::where('id', $client->id)->first()->trade_name;
+            $clientName = Client::find($client->id)->trade_name;
           break;
           case "individual":
-            $clientName = Client::where('id', $client->id)->first()->full_name;
+            $clientName = Client::find($client->id)->full_name;
           break;
         }
 
+        // create client price
+        if($price->where('id', $request->price_id)->exists()){
 
-        $clientprice = ClientPrice::create([
-          'client_id' => $client->id,
-          'client_name' => $clientName,
-          'price_id' => $request->price_id,
-          'price_name' => Price::where('id', $request->price_id)->first()->name
-        ]);
+          ClientPrice::create([
 
+            'client_id' => $client->id,
+            'client_name' => $clientName,
+            'price_id' => $request->price_id,
+            'price_name' => $price->find($request->price_id)->name
 
+          ]);
+
+        }
+
+        // get the client price
+        $clientprice = ClientPrice::where('client_id', $client->id)->select('price_id', 'price_name')->get();
+
+        // get the client contacts 
         $clientcontact = ClientContact::where('client_id', $client->id)->get();
+
 
         return response()->json([
           "status" => "success",
@@ -169,12 +190,7 @@ class ClientController extends Controller
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function show($id)
     {
 
@@ -189,23 +205,29 @@ class ClientController extends Controller
 
         }
 
+        $clientprice = ClientPrice::where('client_id', $client->id)->select('price_id', 'price_name')->get();
+
+        $clientcontact = ClientContact::where('client_id', $client->id)->get();
+
+        $clientbills = Bill::where('client_id', $client->id)->orderBy('id', 'DESC')->get();
 
         return response()->json([
           "status" => "success",
-          "data" => $client
+          "data" => [
+
+            'client' => $client,
+            'clientcontact' => $clientcontact,
+            'clientprice' => $clientprice,
+            'ClientBills' => $clientbills
+
+          ]
         ], 200);
 
 
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         $client = Client::find($id);
@@ -219,21 +241,14 @@ class ClientController extends Controller
 
         }
 
+        $price = new Price;
         $rules = [
             'type' => 'required',
             'trade_name' => "required_if:type,business|unique:clients,trade_name,$id",
             'full_name' => "required_if:type,individual|unique:clients,full_name,$id",
             'first_name' => 'required_if:type,business',
             'last_name' => 'required_if:type,business',
-            'mobile' => 'required|integer',
-            'telephone' => 'required|integer',
-            'first_address' => 'required',
-            'sec_address' => 'required',
-            'state' => 'required',
-            'postal_code' => 'required|integer',
-            'country' => 'required',
-            'city' => 'required',
-            'tax_record' => 'integer',
+            'postal_code' => 'integer',
             'secondary_address' => 'Boolean',
             'secondary_address1' => 'required_if:secondary_address,1',
             'secondary_address2' => 'required_if:secondary_address,1',
@@ -242,16 +257,16 @@ class ClientController extends Controller
             'sec_country' => 'required_if:secondary_address,1',
             'sec_postal_code' => 'required_if:secondary_address,1|integer',
             'code_num' => "required|integer|unique:clients,code_num,$id",
-            'invoicing_method' => 'required',
-            'currency' => 'required',
             'email' => "required|email|unique:clients,email,$id",
-            'category' => 'required',
-            'notes' => 'required',
-            'language' => 'required',
-            'price_id' => 'required',
-            'contact_email' => "email|unique:clients,contact_email,$id",
-            'contact_telephone' => 'integer',
-            'contact_mobile' => 'integer'
+            'contacts.*.contact_email' => "email",
+            'contacts.*.contact_telephone' => 'integer',
+            'contacts.*.contact_mobile' => 'integer',
+            'send_data' => 'Boolean|required_if:invoicing_method,send via email',
+            'price_id' => [
+
+              Rule::exists($price->getTable(),$price->getKeyName()),
+
+            ]
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -294,7 +309,10 @@ class ClientController extends Controller
           'email' => $request->email,
           'category' => $request->category,
           'notes' => $request->notes,
-          'language' => $request->language
+          'language' => $request->language,
+          'send_data' => $request->send_data,
+          'employee_id' => Auth::id(),
+          'tag' => $request->tag
         ]);
 
         ClientContact::where('client_id', $client->id)->delete();
@@ -319,26 +337,34 @@ class ClientController extends Controller
         ClientPrice::where('client_id', $client->id)->delete();
 
         $type = $client->type;
-
         switch($type){
           case "business": 
-            $clientName = Client::where('id', $client->id)->first()->trade_name;
+            $clientName = Client::find($client->id)->trade_name;
           break;
           case "individual":
-            $clientName = Client::where('id', $client->id)->first()->full_name;
+            $clientName = Client::find($client->id)->full_name;
           break;
         }
 
 
-        $clientprice = ClientPrice::create([
-          'client_id' => $client->id,
-          'client_name' => $clientName,
-          'price_id' => $request->price_id,
-          'price_name' => Price::where('id', $request->price_id)->first()->name
-        ]);
+        if($price->where('id', $request->price_id)->exists()){
+
+          ClientPrice::create([
+
+            'client_id' => $client->id,
+            'client_name' => $clientName,
+            'price_id' => $request->price_id,
+            'price_name' => $price->find($request->price_id)->name
+
+          ]);
+
+        }
 
 
         $clientcontact = ClientContact::where('client_id', $client->id)->get();
+
+        $clientprice = ClientPrice::where('client_id', $client->id)->select('price_id', 'price_name')->get();
+
 
 
         return response()->json([
@@ -353,12 +379,8 @@ class ClientController extends Controller
         ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
+
+
     public function destroy($id)
     {
         $client = Client::find($id);
@@ -382,7 +404,6 @@ class ClientController extends Controller
     }
 
 
-    // قائمة الاتصال
     public function contactList(){
       
 
@@ -396,18 +417,6 @@ class ClientController extends Controller
         
     }
 
-
-    public function getClients(){
-
-      $clients = Client::select('id', 'first_name', 'last_name')->get();
-
-      return response()->json([
-          "status" => "success",
-          "data" => $clients
-      ], 200);
-
-
-    }
 
     public function Clients(){
 

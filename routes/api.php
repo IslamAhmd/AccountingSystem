@@ -79,14 +79,15 @@ Route::group(['middleware' => ['jwt.verify']], function(){
     // Treasuries
     Route::apiResource('treasury', 'TreasuryController')->except(['create', 'edit']);
     // Bank Accounts
-    Route::apiResource('account', 'BankAccountController')->except(['create', 'edit']);
+    Route::apiResource('bankaccount', 'BankAccountController')->except(['create', 'edit']);
     // Restrictions
     Route::apiResource('restriction', 'RestrictionController')->except(['create', 'edit']);
     // Account
-    Route::post('acount', 'AccountController@store');
-
-
-
+    Route::post('account', 'AccountController@store');
+    // Client Statuses
+    Route::apiResource('status', 'ClientStatusController')->except(['create', 'edit', 'show']);
+    // Date Actions
+    Route::apiResource('action', 'DateActionController')->except(['create', 'edit', 'show']);
 
 
 });

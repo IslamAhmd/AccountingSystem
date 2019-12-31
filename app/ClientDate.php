@@ -32,4 +32,10 @@ class ClientDate extends Model
         return Client::where('id', $this->client_id)->first()->trade_name;
     }
 
+    public function setRepeatedDateAttribute($value){
+
+        $this->attributes['repeateddate'] = date('Y/m/d', strtotime($value));
+
+    }
+
 }

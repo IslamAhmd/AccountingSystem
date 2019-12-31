@@ -20,17 +20,17 @@ class CreateClientsTable extends Migration
             $table->string('full_name')->unique()->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->string('telephone');
-            $table->string('mobile');
-            $table->string('first_address');
-            $table->string('sec_address');
-            $table->string('city');
-            $table->string('state');
-            $table->string('postal_code');
-            $table->string('country');
+            $table->string('telephone')->nullable();
+            $table->string('mobile')->nullable();
+            $table->string('first_address')->nullable();
+            $table->string('sec_address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->string('country')->nullable();
             $table->string('cr')->nullable();
             $table->string('tax_record')->nullable();
-            $table->boolean('secondary_address')->default('0');
+            $table->boolean('secondary_address')->nullable()->default('0');
             $table->string('secondary_address1')->nullable();
             $table->string('secondary_address2')->nullable();
             $table->string('sec_city')->nullable();
@@ -38,15 +38,18 @@ class CreateClientsTable extends Migration
             $table->string('sec_postal_code')->nullable();
             $table->string('sec_country')->nullable();
             $table->unsignedInteger('code_num')->unique();
-            $table->string('invoicing_method');
-            $table->string('currency');
+            $table->string('invoicing_method')->nullable();
+            $table->string('currency')->nullable();
             $table->string('email')->unique();
-            $table->string('category');
-            $table->text('notes');
-            $table->string('language');
-            // $table->unsignedBigInteger('price_id');
-            // $table->string('price_name');
+            $table->json('category')->nullable();
+            $table->text('notes')->nullable();
+            $table->string('language')->nullable();
+            $table->boolean('send_data')->nullable()->default('0');
+            $table->unsignedBigInteger('employee_id');
+            $table->json('tag')->nullable();
             $table->timestamps();
+
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
 
         });
     }

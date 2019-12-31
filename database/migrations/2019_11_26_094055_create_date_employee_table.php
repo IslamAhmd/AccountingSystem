@@ -4,25 +4,25 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEmployeesReposTable extends Migration
+class CreateDateEmployeeTable extends Migration
 {
     /**
      * Run the migrations.
      *
-     * @return voname
+     * @return void
      */
     public function up()
     {
-        Schema::create('employees_repos', function (Blueprint $table) {
+        Schema::create('dates_employees', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('date_id');
             $table->unsignedBigInteger('employee_id');
-            $table->unsignedBigInteger('repo_id');
-            $table->string('emp_name');
-            $table->string('repo_name');
+            $table->string('employee_name');
             $table->timestamps();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
-            $table->foreign('repo_id')->references('id')->on('repos')->onDelete('cascade');
+            $table->foreign('date_id')->references('id')->on('client_dates')->onDelete('cascade');
+
 
         });
     }
@@ -30,10 +30,10 @@ class CreateEmployeesReposTable extends Migration
     /**
      * Reverse the migrations.
      *
-     * @return voname
+     * @return void
      */
     public function down()
     {
-        Schema::dropIfExists('employees_repos');
+        Schema::dropIfExists('dates_employees');
     }
 }

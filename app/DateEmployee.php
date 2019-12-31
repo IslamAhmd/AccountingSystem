@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ClientContact extends Model
+class DateEmployee extends Model
 {
     protected $guarded = [];
 
-    protected $table = 'clients_contact_lists';
+    protected $table = 'dates_employees';
 }

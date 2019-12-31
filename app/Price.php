@@ -12,4 +12,5 @@ class Price extends Model
 
     	$this->attributes['price_date'] = date('Y/m/d', strtotime($value));
     } 
+
 }
