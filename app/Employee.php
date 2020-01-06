@@ -6,10 +6,15 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use Illuminate\Http\Request;
+
 
 class Employee extends Model
 {
     protected $guarded = [];
+
+    protected $hidden = ['pivot'];
+
 
    // check if the user is acitve or not 
     public function getActiveAttribute($value){
@@ -21,5 +26,13 @@ class Employee extends Model
     	} else {
     		return 0;
     	}
+    }
+
+
+
+    public function imports(){
+
+        return $this->belongsToMany('App\Import');
+
     }
 }

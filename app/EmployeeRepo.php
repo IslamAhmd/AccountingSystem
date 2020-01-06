@@ -4,7 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ClientStatus extends Model
+class EmployeeRepo extends Model
 {
+    protected $table = 'employees_repos';
+
     protected $guarded = [];
 }

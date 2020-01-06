@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDateEmployeeTable extends Migration
+class CreateEmployeeImportTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,15 @@ class CreateDateEmployeeTable extends Migration
      */
     public function up()
     {
-        Schema::create('dates_employees', function (Blueprint $table) {
+        Schema::create('employee_import', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('date_id');
             $table->unsignedBigInteger('employee_id');
             $table->string('employee_name');
+            $table->unsignedBigInteger('import_id');
             $table->timestamps();
 
+            $table->foreign('import_id')->references('id')->on('imports')->onDelete('cascade');
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
-            $table->foreign('date_id')->references('id')->on('client_dates')->onDelete('cascade');
-
 
         });
     }
@@ -34,6 +33,6 @@ class CreateDateEmployeeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dates_employees');
+        Schema::dropIfExists('employee_import');
     }
 }

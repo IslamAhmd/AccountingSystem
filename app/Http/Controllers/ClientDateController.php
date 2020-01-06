@@ -44,12 +44,14 @@ class ClientDateController extends Controller
 
     public function store(Request $request){
 
+        $client = new Client;
+        $employee = new Employee;
 
     	  $rules = [
 
             'client_id' => [
               'required',
-              Rule::exists(Client::getTable(), Client::getKeyName())
+              Rule::exists($client->getTable(), $client->getKeyName())
               ],
             'date' => 'required|date',
             'duration' => 'required',
@@ -64,7 +66,7 @@ class ClientDateController extends Controller
             'employees' => 'required_if:employee,1',
             'employees.*' => [
               'required',
-              Rule::exists(Employee::getTable(), Employee::getKeyName())
+              Rule::exists($employee->getTable(), $employee->getKeyName())
 
             ]
         ];
@@ -166,11 +168,14 @@ class ClientDateController extends Controller
         }
 
 
+        $client = new Client;
+        $employee = new Employee;
+
         $rules = [
 
             'client_id' => [
               'required',
-              Rule::exists(Client::getTable(), Client::getKeyName())
+              Rule::exists($client->getTable(), $client->getKeyName())
               ],
             'date' => 'required|date',
             'duration' => 'required',
@@ -185,7 +190,7 @@ class ClientDateController extends Controller
             'employees' => 'required_if:employee,1',
             'employees.*' => [
               'required',
-              Rule::exists(Employee::getTable(), Employee::getKeyName())
+              Rule::exists($employee->getTable(), $employee->getKeyName())
 
             ]
         ];

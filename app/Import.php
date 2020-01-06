@@ -3,11 +3,21 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use App\Client;
 
 class Import extends Model
 {
-    protected $fillable = ['name', 'import_num', 'starts_at', 'ends_at', 'desc', 'tag', 'budget', 'client_id', 'employee_id', 'shipment_num', 'container_data', 'shipment_date', 'arrival_date', 'abstract_name', 'abstract_num', 'shipment_location', 'doc_credit_num', 'gurantee_letter_num', 'employee'];
+    protected $guarded = ['client_name'];
 
+    protected $hidden = ['pivot', 'employees'];
+
+    protected $casts = [
+
+        'tag' => 'array',
+        'abstract_name' => 'array',
+        'shipment_location' => 'array'
+    ];
 
     public function setStartsAtAttribute($value){
 
@@ -33,5 +43,10 @@ class Import extends Model
 
     }
 
+    public function employees(){
+
+        return $this->belongsToMany('App\Employee');
+
+    }
     
 }

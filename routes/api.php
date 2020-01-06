@@ -37,7 +37,7 @@ Route::group(['middleware' => ['jwt.verify']], function(){
     // employee
     Route::apiResource('employee', 'EmployeeController')->except(['create', 'edit']);
     // import
-    Route::apiResource('import', 'ImportController')->only(['index', 'store']);
+    Route::apiResource('import', 'ImportController')->except(['create', 'edit']);
     // Supplier
     Route::apiResource('supplier', 'SupplierController')->except(['create', 'edit']);
     // payment reports
@@ -88,6 +88,7 @@ Route::group(['middleware' => ['jwt.verify']], function(){
     Route::apiResource('status', 'ClientStatusController')->except(['create', 'edit', 'show']);
     // Date Actions
     Route::apiResource('action', 'DateActionController')->except(['create', 'edit', 'show']);
-
+    // Taxes
+    Route::apiResource('tax', 'TaxesController')->except(['create', 'edit', 'show']);
 
 });

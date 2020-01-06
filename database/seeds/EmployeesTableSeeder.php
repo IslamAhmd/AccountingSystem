@@ -29,7 +29,9 @@ class EmployeesTableSeeder extends Seeder
             'language' => 'ara',
        		'email' => 'admin@system.com',
        		'notes' => 'Super Admin of Accounting System',
+            'role_id'  => $super_admin->id,
        		'role_name' => $super_admin->name
         ]);
+
     }
 }

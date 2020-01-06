@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ClientStatus extends Model
+class ServiceTax extends Model
 {
-    protected $guarded = [];
+    //
 }

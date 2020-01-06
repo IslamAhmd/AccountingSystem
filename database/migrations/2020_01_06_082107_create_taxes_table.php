@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateClientStatusesTable extends Migration
+class CreateTaxesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateClientStatusesTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_statuses', function (Blueprint $table) {
+        Schema::create('taxes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name')->unique();
-            $table->string('color');
+            $table->unsignedBigInteger('value');
+            $table->string('unit')->default('غير متضمن');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateClientStatusesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('client_statuses');
+        Schema::dropIfExists('taxes');
     }
 }

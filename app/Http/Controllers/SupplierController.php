@@ -50,8 +50,13 @@ class SupplierController extends Controller
             'balance' => 'required|integer',
             'balance_date' => 'required|date',
             'email' => 'required|email|unique:suppliers',
-            'notes' => 'required',
-            'supplier_num' => 'required|integer|unique:suppliers'
+            'notes' => 'required'
+            // 'employees' => 'required',
+            // 'employees.*.emp' => [
+
+            //   Rule::exists($employee->getTable(), $employee->getKeyName())
+
+            // ]
         ];
 
 
@@ -66,28 +71,9 @@ class SupplierController extends Controller
 
         }
 
-        $supplier = Supplier::create([
-            'trade_name' => $request->trade_name,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'mobile' => $request->mobile,
-            'phone' => $request->phone,
-            'first_address' => $request->first_address,
-            'sec_address' => $request->sec_address,
-            'governorate' => $request->governorate,
-            'postal_code' => $request->postal_code,
-            'country' => $request->country,
-            'city' => $request->city,
-            'currency' => $request->currency,
-            'balance' => $request->balance,
-            'balance_date' => $request->balance_date,
-            'email' => $request->email,
-            'notes' => $request->notes,
-            'supplier_num' => $request->supplier_num,
-            'emp_name' => Auth()->user()->name
-        ]);
-
-        // $supplier->emp_name = Auth()->user()->name;
+        $supplier = Supplier::create($request->except('emp_name'));
+        $supplier->emp_name = Auth()->user()->name;
+        $supplier->save();
 
         return response()->json([
           "status" => "success",
@@ -156,7 +142,6 @@ class SupplierController extends Controller
             'balance_date' => 'required|date',
             'email' => "required|email|unique:suppliers,email,$id",
             'notes' => 'required',
-            'supplier_num' => "required|integer|unique:suppliers,supplier_num,$id"
         ];
 
 
@@ -172,26 +157,10 @@ class SupplierController extends Controller
         }
 
 
-        $supplier->update([
-            'trade_name' => $request->trade_name,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'mobile' => $request->mobile,
-            'phone' => $request->phone,
-            'first_address' => $request->first_address,
-            'sec_address' => $request->sec_address,
-            'governorate' => $request->governorate,
-            'postal_code' => $request->postal_code,
-            'country' => $request->country,
-            'city' => $request->city,
-            'currency' => $request->currency,
-            'balance' => $request->balance,
-            'balance_date' => $request->balance_date,
-            'email' => $request->email,
-            'notes' => $request->notes,
-            'supplier_num' => $request->supplier_num,
-            'emp_name' => Auth()->user()->name
-        ]);
+        $supplier->update($request->except('emp_name'));
+        $supplier->emp_name = Auth()->user()->name;
+        $supplier->save();
+
 
         return response()->json([
           "status" => "success",

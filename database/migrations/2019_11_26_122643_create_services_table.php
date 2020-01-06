@@ -17,20 +17,20 @@ class CreateServicesTable extends Migration
             $table->bigIncrements('id');
             $table->string('name')->unique();
             $table->text('desc');
-            $table->unsignedBigInteger('selling_price');
-            $table->unsignedBigInteger('first_tax');
-            $table->unsignedBigInteger('sec_tax');
+            $table->unsignedBigInteger('unit_price')->nullable();
             $table->unsignedBigInteger('purchase_price');
-            $table->string('product_code')->unique();
-            $table->string('barcode')->unique();
-            $table->string('category');
-            $table->string('brand');
+            $table->string('service_code')->unique();
+            $table->json('category');
             $table->text('notes');
-            $table->boolean('repo');
-            $table->unsignedBigInteger('repo_quantity');
-            $table->unsignedBigInteger('least_quantity');
-            $table->boolean('disabled');
+            $table->boolean('disabled')->default('0');
+            $table->string('supplier_name')->nullable();
+            $table->unsignedBigInteger('supplier_id');
+            $table->json('tag');
+            $table->string('status')->nullable();
             $table->timestamps();
+
+            $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
+
         });
     }
 

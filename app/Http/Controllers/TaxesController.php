@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\DateAction;
+use App\Tax;
 use Validator;
 
-class DateActionController extends Controller
+class TaxesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,16 +15,13 @@ class DateActionController extends Controller
      */
     public function index()
     {
-        $actions = DateAction::get();
+        $taxes = Tax::get();
 
         return response()->json([
-            "status" => "Success",
-            "data" => $actions 
-        ]);
+          "status" => "success",
+          "data" => $taxes
+        ], 200);
     }
-
-
-
 
     /**
      * Store a newly created resource in storage.
@@ -35,10 +32,14 @@ class DateActionController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            "name" => "required|unique:date_actions"
+
+            'name' => "required|unique:taxes",
+            'value' => 'required|integer'
+
         ];
 
         $validator = Validator::make($request->all(), $rules);
+
         if($validator->fails()){
 
             return response()->json([
@@ -48,14 +49,12 @@ class DateActionController extends Controller
 
         }
 
-        $action = DateAction::create($request->all());
+        $tax = Tax::create($request->all());
 
         return response()->json([
           "status" => "success",
-          "data" => $action
+          "data" => $tax
         ], 201);
-
-
     }
 
 
@@ -66,15 +65,19 @@ class DateActionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,$id)
     {
-        $action = DateAction::find($id);
+        $tax = Tax::find($id);
 
         $rules = [
-            "name" => "required|unique:date_actions,name,$id"
+
+            'name' => "required|unique:taxes,name,$id",
+            'value' => 'required|integer'
+
         ];
 
         $validator = Validator::make($request->all(), $rules);
+
         if($validator->fails()){
 
             return response()->json([
@@ -84,13 +87,12 @@ class DateActionController extends Controller
 
         }
 
-        $action->update($request->all());
+        $tax->update($request->all());
 
         return response()->json([
           "status" => "success",
-          "data" => $action
+          "data" => $tax
         ], 200);
-
 
     }
 
@@ -102,14 +104,13 @@ class DateActionController extends Controller
      */
     public function destroy($id)
     {
-        $action = DateAction::find($id);
+        $tax = Tax::find($id);
         
-        $action->delete();
+        $tax->delete();
 
         return response()->json([
           "status" => "success",
-          "message" => "Action deleted Successfully"
-        ]);
-
+          "message" => "Tax deleted Successfully"
+        ]); 
     }
 }

@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Role;
 use App\User;
+use App\EmployeeRepo;
+use App\Repo;
+use Illuminate\Validation\Rule;
 
 
 class EmployeeController extends Controller
@@ -21,9 +24,16 @@ class EmployeeController extends Controller
     {
         $employees = Employee::get();
 
+        $employees_id = $employees->pluck('id');
+
+        $employeerepos = EmployeeRepo::whereIn('employee_id', $employees_id)->select('employee_id', 'repo_id', 'repo_name')->get();
+
         return response()->json([
           "status" => "success",
-          "data" => $employees
+          "data" => [
+            'Employees' => $employees,
+            'employeerepo' => $employeerepos
+          ]
         ], 200);
     }
 
@@ -36,6 +46,9 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
+
+        $role = new Role;
+        $repo = new Repo;
         $rules = [
             'name' => 'required|unique:employees',
             'mobile' => 'required|integer',
@@ -49,7 +62,15 @@ class EmployeeController extends Controller
             'language' => 'required',
             'email' => 'required|email|unique:employees',
             'notes' => 'required',
-            'role_name' => 'required'
+            'role_id' => [
+
+                'required',
+                Rule::exists($role->getTable(), $role->getKeyName())
+            ],
+            'repo_id' => [
+              // 'required',
+                Rule::exists($repo->getTable(), $repo->getKeyName())
+            ]
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -62,19 +83,52 @@ class EmployeeController extends Controller
             ]);
         }
 
-        $employee = Employee::create($request->all());
+        $employee = Employee::create([
+          'name' => $request->name,
+          'mobile' => $request->mobile,
+          'phone' => $request->phone,
+          'first_address' => $request->first_address,
+          'sec_address' => $request->sec_address,
+          'governorate' => $request->governorate,
+          'postal_code' => $request->postal_code,
+          'country' => $request->country,
+          'city' => $request->city,
+          'language' => $request->language,
+          'email' => $request->email,
+          'notes' => $request->notes,
+          'role_id' => $request->role_id,
+          'role_name' => Role::find($request->role_id)->name
+        ]);
 
 
-        $user = User::create([
+        User::create([
             "name" => $employee->name,
             'employee_id' => $employee->id,
             "email" => $employee->email,
             "password" => bcrypt('123456')
         ]);
 
+        if(Repo::where('id', $request->repo_id)->exists()){
+
+            EmployeeRepo::create([
+
+              'employee_id' => $employee->id,
+              'repo_id' => $request->repo_id,
+              'repo_name' => Repo::find($request->repo_id)->name
+
+            ]);
+
+        }
+        
+
+        $employeerepo = EmployeeRepo::where('employee_id', $employee->id)->select('repo_id', 'repo_name')->get();
+
         return response()->json([
           "status" => "success",
-          "data" => $employee
+          "data" => [
+            'Employee' => $employee,
+            'employeerepo' => $employeerepo
+          ]
         ], 201);
 
     }
@@ -96,9 +150,15 @@ class EmployeeController extends Controller
             ]);
         }
 
+        $employeerepo = EmployeeRepo::where('employee_id', $employee->id)->select('repo_id', 'repo_name')->get();
+
         return response()->json([
           "status" => "success",
-          "data" => $employee
+          "data" => [
+
+            'Employee' => $employee,
+            'employeerepo' => $employeerepo
+          ]
         ], 200);
     }
 
@@ -121,8 +181,10 @@ class EmployeeController extends Controller
             ]);
         }
 
+        $role = new Role;
+        $repo = new Repo;
         $rules = [
-            'name' => 'required|unique:employees,name,$id',
+            'name' => "required|unique:employees,name,$id",
             'mobile' => 'required|integer',
             'phone' => 'required|integer',
             'first_address' => 'required',
@@ -132,9 +194,17 @@ class EmployeeController extends Controller
             'country' => 'required',
             'city' => 'required',
             'language' => 'required',
-            'email' => 'required|email|unique:employees,email,$id',
+            'email' => "required|email|unique:employees,email,$id",
             'notes' => 'required',
-            'role_name' => 'required'
+            'role_id' => [
+
+                'required',
+                Rule::exists($role->getTable(), $role->getKeyName())
+            ],
+            'repo_id' => [
+
+                Rule::exists($repo->getTable(), $repo->getKeyName())
+            ]
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -147,11 +217,40 @@ class EmployeeController extends Controller
             ]);
         }
 
+
         $employee->update($request->all());
+
+
+        User::where('employee_id', $employee->id)->delete();
+        User::create([
+            "name" => $employee->name,
+            'employee_id' => $employee->id,
+            "email" => $employee->email,
+            "password" => bcrypt('123456')
+        ]);
+
+        
+        EmployeeRepo::where('employee_id', $employee->id)->delete();
+        if(EmployeeRepo::where('repo_id', $request->repo_id)->exists()){
+
+          EmployeeRepo::create([
+
+            'employee_id' => $employee->id,
+            'repo_id' => $request->repo_id,
+            'repo_name' => Repo::find($request->repo_id)->name
+
+          ]);
+
+        }
+        $employeerepo = EmployeeRepo::where('employee_id', $employee->id)->select('repo_id', 'repo_name')->get();
+
 
         return response()->json([
           "status" => "success",
-          "data" => $employee
+          "data" => [
+            'Employee' => $employee,
+            'employeerepo' => $employeerepo
+          ]
         ], 200);
     }
 

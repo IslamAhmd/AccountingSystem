@@ -17,8 +17,6 @@ class ClientController extends Controller
 {
      
 
-
-
     public function index()
     {
 
@@ -26,8 +24,6 @@ class ClientController extends Controller
         $clients = Client::get();
 
         $clients_id = $clients->pluck('id');
-
-      // return $clients_id;
         
         $clientscontacts = ClientContact::whereIn('client_id', $clients_id)->get();
       
@@ -319,7 +315,7 @@ class ClientController extends Controller
 
         $contacts = $request->contacts;
 
-        foreach ($contacts as $contact) {
+        foreach ((array) $contacts as $contact) {
 
           ClientContact::create([
 
@@ -407,7 +403,7 @@ class ClientController extends Controller
     public function contactList(){
       
 
-        $clients = Client::select('first_name', 'last_name', 'trade_name', 'mobile', 'phone', 'code_num', 'email')->get();
+        $clients = Client::select('first_name', 'last_name', 'trade_name', 'mobile', 'telephone', 'code_num', 'email')->get();
 
 
         return response()->json([

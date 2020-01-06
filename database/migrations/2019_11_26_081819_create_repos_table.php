@@ -23,7 +23,6 @@ class CreateReposTable extends Migration
             $table->string('bill');
             $table->string('store');
             $table->timestamps();
-
         });
     }
 
