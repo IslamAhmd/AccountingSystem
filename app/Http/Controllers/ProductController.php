@@ -24,9 +24,21 @@ class ProductController extends Controller
     {
         $products = Product::get();
 
+        $products_ids = $products->pluck('id');
+
+        $priceproducts = PriceProduct::whereIn('product_id', $products_ids)->get(['product_id', 'price_id', 'price_name']);
+
+        $producttaxes = ProductTax::whereIn('product_id', $products_ids)->get(['product_id', 'tax_id', 'tax_name']);
+
         return response()->json([
           "status" => "success",
-          "data" => $products
+          "data" => [
+
+            'products' => $products,
+            'priceproducts' => $priceproducts,
+            'producttaxes' => $producttaxes
+
+          ]
         ], 200);
 
     }
@@ -69,7 +81,6 @@ class ProductController extends Controller
               Rule::exists($supplier->getTable(), $supplier->getKeyName())
             ],
             'tag' => 'required',
-            'taxes' => 'required',
             'taxes.*.tax' => [
 
               Rule::exists($tax->getTable(), $tax->getKeyName())
@@ -105,8 +116,7 @@ class ProductController extends Controller
               'product_id' => $product->id,
               'product_name' => $product->name,
               'tax_id' => $ta['tax'],
-              'tax_name' => Tax::where('id', $ta['tax'])->first()->name,
-              'tax_value' => Tax::where('id', $ta['tax'])->first()->value
+              'tax_name' => Tax::where('id', $ta['tax'])->first()->name
 
           ]);
         }
@@ -114,10 +124,18 @@ class ProductController extends Controller
 
 
         $ids = ProductTax::where('product_id', $product->id)->pluck('tax_id');
-        // return $ids;
+        
         $values = Tax::find($ids, ['value']);
-        // return $values[0]['value'];
-        $product->selling_price = $product->selling_price + ( ($values[0]['value']/100) * $product->selling_price ) + ( ($values[1]['value']/100) * $product->selling_price );
+        
+        $taxesVales = 0;
+        for($i = 0; $i < count($values); $i++){ 
+          
+          $taxesVales += ( ($values[$i]['value']/100) * $product->selling_price );
+
+        }
+
+        $product->selling_price = $product->selling_price + $taxesVales;
+  
 
         $product->supplier_name = $supplier->where('id', $product->supplier_id)->first()->trade_name;
 
@@ -153,7 +171,7 @@ class ProductController extends Controller
         ]);
 
         $producttax = ProductTax::where('product_id', $product->id)->get(['tax_id', 'tax_name']);
-        // return $producttax;
+        
          
         $priceproduct = PriceProduct::where('product_id', $product->id)->first(['price_id', 'price_name']);
 
@@ -166,6 +184,211 @@ class ProductController extends Controller
             'productprice' => $priceproduct
           ]
         ], 201);
+    }
+
+    public function show($id){
+
+      $product = Product::find($id);
+
+      if (! $product) {
+        
+          return response()->json([
+              "status" => "error",
+              "errors" => "Product Not Found"
+          ]);
+
+      }
+
+      $producttax = ProductTax::where('product_id', $product->id)->get(['tax_id', 'tax_name']);
+        
+         
+      $priceproduct = PriceProduct::where('product_id', $product->id)->first(['price_id', 'price_name']);
+
+      return response()->json([
+          "status" => "success",
+          "data" => [
+
+            'product' => $product,
+            'producttaxes' => $producttax,
+            'productprice' => $priceproduct
+          ]
+      ], 200);
+    }
+
+    public function update(Request $request, $id){
+
+      $product = Product::find($id);
+
+      if (! $product) {
+        
+          return response()->json([
+              "status" => "error",
+              "errors" => "Product Not Found"
+          ]);
+
+      }
+
+      $repo = new Repo;
+      $supplier = new Supplier;
+      $tax = new Tax;
+      $price = new Price;
+
+      $rules = [
+            'name' => "required|unique:products,name,$id",
+            'desc' => 'required',
+            'selling_price' => 'required|integer',
+            'purchase_price' => 'required|integer',
+            'product_code' => "required|unique:products,product_code,$id",
+            'brand' => 'required',
+            'barcode' => "required|unique:products,barcode,$id",
+            'category' => 'required',
+            'notes' => 'required',
+            'repo' => 'Boolean',
+            'repo_quantity' => 'required_if:repo,1',
+            'repo_id' => [
+              'required_if:repo,1',
+              Rule::exists($repo->getTable(), $repo->getKeyName())
+            ],
+            'least_quantity' => 'required_if:repo,1',
+            'disabled' => 'Boolean',
+            'supplier_id' => [
+              'required',
+              Rule::exists($supplier->getTable(), $supplier->getKeyName())
+            ],
+            'tag' => 'required',
+            'taxes.*.tax' => [
+
+              Rule::exists($tax->getTable(), $tax->getKeyName())
+            ],
+            'price_id' => [
+
+                Rule::exists($price->getTable(), $price->getKeyName())
+
+            ]
+      ];
+
+      $validator = Validator::make($request->all(), $rules);
+
+      if($validator->fails()){
+
+            return response()->json([
+              "status" => "error",
+              "errors" => $validator->errors()
+            ]);
+
+      }
+
+
+      $product->update($request->except(['taxes', 'price_id']));
+
+
+      $producttax = ProductTax::where('product_id', $product->id)->delete();
+        
+         
+      $priceproduct = PriceProduct::where('product_id', $product->id)->delete();
+
+
+      $taxes = $request->taxes;
+        
+      foreach((array) $taxes as $ta){
+          
+          ProductTax::create([
+
+              'product_id' => $product->id,
+              'product_name' => $product->name,
+              'tax_id' => $ta['tax'],
+              'tax_name' => Tax::where('id', $ta['tax'])->first()->name
+
+          ]);
+
+      }
+
+
+
+      $ids = ProductTax::where('product_id', $product->id)->pluck('tax_id');
+
+      $values = Tax::find($ids, ['value']);
+        
+        $taxesVales = 0;
+        for($i = 0; $i < count($values); $i++){ 
+          
+          $taxesVales += ( ($values[$i]['value']/100) * $product->selling_price );
+
+        }
+
+        $product->selling_price = $product->selling_price + $taxesVales;
+  
+
+        $product->supplier_name = $supplier->where('id', $product->supplier_id)->first()->trade_name;
+
+        $product->repo_name = $repo->where('id', $product->repo_id)->first()->name;
+
+        if($product->repo_quantity > $product->least_quantity && $product->disabled === '0'){
+
+          $product->status = "متاح";
+
+        } elseif ($product->repo_quantity === $product->least_quantity && $product->disabled === '0') {
+          
+          $product->status = "مخزون منخفض";
+
+        } elseif ($product->repo_quantity < $product->least_quantity && $product->disabled === '0') {
+          
+          $product->status = "مخزون نفذ";
+
+        } elseif ($product->disabled === '1') {
+
+          $product->status = "غير نشط";
+
+        }
+        $product->save();
+
+
+        PriceProduct::create([
+
+          'product_id' => $product->id,
+          'product_name' => $product->name,
+          'price_id' => $request->price_id,
+          'price_name' => $price->where('id', $request->price_id)->first()->name
+
+        ]);
+
+        $producttax = ProductTax::where('product_id', $product->id)->get(['tax_id', 'tax_name']);
+        
+         
+        $priceproduct = PriceProduct::where('product_id', $product->id)->first(['price_id', 'price_name']);
+
+        return response()->json([
+          "status" => "success",
+          "data" => [
+
+            'product' => $product,
+            'producttaxes' => $producttax,
+            'productprice' => $priceproduct
+          ]
+        ], 200);
+
+    }
+
+    public function destroy($id){
+
+      $product = Product::find($id);
+
+      if (! $product) {
+        
+          return response()->json([
+              "status" => "error",
+              "errors" => "Product Not Found"
+          ]);
+
+      }
+
+      $product->delete();
+
+      return response()->json([
+          "status" => "success",
+          "message" => "Product deleted Successfully"
+      ]);
+
     }
 
 }

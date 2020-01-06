@@ -18,8 +18,7 @@ class CreateProductTaxesTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->string('product_name')->nullable();           
             $table->unsignedBigInteger('tax_id');
-            $table->string('tax_name')->nullable();           
-            $table->unsignedBigInteger('tax_value')->nullable();
+            $table->string('tax_name')->nullable();         
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');

@@ -19,7 +19,6 @@ class CreateServiceTaxesTable extends Migration
             $table->string('service_name')->nullable();
             $table->unsignedBigInteger('tax_id');
             $table->string('tax_name')->nullable();
-            $table->unsignedBigInteger('tax_value')->nullable();
             $table->timestamps();
 
             $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');

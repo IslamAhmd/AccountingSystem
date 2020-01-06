@@ -36,6 +36,7 @@ class PriceController extends Controller
     public function store(Request $request)
     {
         $rules = [
+            
             'method' => 'required',
             'price_date' => 'required|date',
             'discount' => 'required|integer',

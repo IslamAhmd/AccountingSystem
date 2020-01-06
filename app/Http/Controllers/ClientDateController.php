@@ -133,6 +133,7 @@ class ClientDateController extends Controller
 
      	$date = ClientDate::find($id);
      	if(! $date){
+
      		return response()->json([
               "status" => "error",
               "errors" => "Date Not Found"
@@ -265,10 +266,10 @@ class ClientDateController extends Controller
 
      	$date->delete();
 
-        return response()->json([
+      return response()->json([
           "status" => "success",
           "message" => "Date deleted Successfully"
-        ]);
+      ]);
 
     }
 

@@ -53,9 +53,9 @@ Route::group(['middleware' => ['jwt.verify']], function(){
     // Purchase
     Route::apiResource('purchase', 'PurchaseController')->except(['create', 'edit']);
     // Products
-    Route::apiResource('product', 'ProductController')->only(['index', 'store']);
+    Route::apiResource('product', 'ProductController')->except(['create', 'edit']);
     // Services
-    Route::apiResource('service', 'ServiceController')->only(['index', 'store']);
+    Route::apiResource('service', 'ServiceController')->except(['create', 'edit']);
     // add inventory
     Route::post('inventory', 'InventoryController@store');
     // Manual Addition
