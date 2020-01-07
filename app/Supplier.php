@@ -10,9 +10,15 @@ class Supplier extends Model
 {
     protected $guarded = [];
 
-    public function setBalanceDateAttribute($value){
+    public function setOpeningBalanceDateAttribute($value){
     	
-    	$this->attributes['balance_date'] = date('Y/m/d', strtotime($value));
+    	$this->attributes['opening_balance_date'] = date('Y/m/d', strtotime($value));
     }
+
+    protected $casts = [
+
+    	'tag' => 'array'
+
+    ];
 
 }

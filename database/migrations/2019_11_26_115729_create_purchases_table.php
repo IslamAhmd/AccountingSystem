@@ -17,14 +17,17 @@ class CreatePurchasesTable extends Migration
         Schema::create('purchases', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('supplier_id');
-            $table->string('supplier_name');
-            $table->unsignedBigInteger('purchase_num')->unique();
+            $table->string('supplier_name')->nullable();
             $table->date('date');
+            $table->string('data')->nullable();
             $table->unsignedBigInteger('payment_conditions');
             $table->unsignedBigInteger('discount');
             $table->string('discount_type');
             $table->unsignedBigInteger('payment');
             $table->string('payment_type');
+            $table->unsignedBigInteger('repo_id');
+            $table->string('repo_name')->nullable();
+            $table->unsignedBigInteger('shipment_costs');
             $table->boolean('paymeny_check')->default(0);
             $table->string('pay_way')->nullable();
             $table->unsignedBigInteger('pay_id')->nullable();

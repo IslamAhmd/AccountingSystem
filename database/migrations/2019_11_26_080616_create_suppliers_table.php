@@ -24,21 +24,28 @@ class CreateSuppliersTable extends Migration
             $table->string('first_address');
             $table->string('sec_address');
             $table->string('city');
-            $table->string('governorate');
+            $table->string('state');
             $table->string('postal_code');
             $table->string('country');
-            $table->string('commercial_register')->default('0');
-            $table->string('tax_record')->default('0');
-            // $table->unsignedBigInteger('emp_id');
+            $table->string('commercial_register')->nullable();
+            $table->string('tax_record')->nullable();
+            $table->boolean('secondary_address')->nullable()->default('0');
+            $table->string('secondary_address1')->nullable();
+            $table->string('secondary_address2')->nullable();
+            $table->string('sec_city')->nullable();
+            $table->string('sec_state')->nullable();
+            $table->string('sec_postal_code')->nullable();
+            $table->string('sec_country')->nullable();
             $table->string('emp_name')->nullable();
             $table->string('currency');
-            $table->unsignedBigInteger('balance');
-            $table->date('balance_date');
+            $table->unsignedBigInteger('opening_balance');
+            $table->date('opening_balance_date');
             $table->string('email')->unique();
             $table->text('notes');
+            $table->json('tag');
             $table->timestamps();
 
-            // $table->foreign('emp_id')->references('id')->on('employees')->onDelete('cascade');
+            
         });
     }
 

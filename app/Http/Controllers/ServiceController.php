@@ -10,6 +10,7 @@ use App\ServiceTax;
 use Illuminate\Validation\Rule;
 use App\Supplier;
 use App\Price;
+use App\Tax;
 
 class ServiceController extends Controller
 {
@@ -88,8 +89,9 @@ class ServiceController extends Controller
 
         }
 
-        $service = Service::create($request->except(['taxes', 'price_id']));
 
+        $service = Service::create($request->except(['taxes', 'price_id']));
+        // return $service;
 
         $taxes = $request->taxes;
         // return $taxes;
@@ -126,6 +128,10 @@ class ServiceController extends Controller
         if($service->disabled === '1') {
 
           $service->status = "غير نشط";
+
+        } else {
+
+          $service->status = null;
 
         }
         $service->save();
@@ -308,7 +314,7 @@ class ServiceController extends Controller
 
     }
 
-    public function destroy(){
+    public function destroy($id){
 
           $service = Service::find($id);
 

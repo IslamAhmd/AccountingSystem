@@ -133,12 +133,13 @@ class ClientController extends Controller
           ClientContact::create([
 
             'client_id' => $client->id,
-            'contact_Fname' => $contact['contact_Fname'],
-            'contact_Lname' => $contact['contact_Lname'],
-            'contact_email' => $contact['contact_email'],
-            'contact_telephone' => $contact['contact_telephone'],
-            'contact_mobile' => $contact['contact_mobile']
+            'contact_Fname' => isset($contact['contact_Fname'])? $contact['contact_Fname'] : null,
+            'contact_Lname' => isset($contact['contact_Lname'])? $contact['contact_Lname'] : null ,
+            'contact_email' => isset($contact['contact_email'])? $contact['contact_email'] : null,
+            'contact_telephone' => isset($contact['contact_telephone'])? $contact['contact_telephone'] : null,
+            'contact_mobile' => isset($contact['contact_mobile'])? $contact['contact_mobile'] : null
           ]);
+          
 
         }
 
@@ -320,11 +321,11 @@ class ClientController extends Controller
           ClientContact::create([
 
             'client_id' => $client->id,
-            'contact_Fname' => $contact['contact_Fname'],
-            'contact_Lname' => $contact['contact_Lname'],
-            'contact_email' => $contact['contact_email'],
-            'contact_telephone' => $contact['contact_telephone'],
-            'contact_mobile' => $contact['contact_mobile']
+            'contact_Fname' => isset($contact['contact_Fname'])? $contact['contact_Fname'] : null,
+            'contact_Lname' => isset($contact['contact_Lname'])? $contact['contact_Lname'] : null ,
+            'contact_email' => isset($contact['contact_email'])? $contact['contact_email'] : null,
+            'contact_telephone' => isset($contact['contact_telephone'])? $contact['contact_telephone'] : null,
+            'contact_mobile' => isset($contact['contact_mobile'])? $contact['contact_mobile'] : null
           ]);
 
         }

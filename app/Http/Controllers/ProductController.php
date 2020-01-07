@@ -157,6 +157,10 @@ class ProductController extends Controller
 
           $product->status = "غير نشط";
 
+        } else {
+
+          $product->status = null;
+          
         }
         $product->save();
 
