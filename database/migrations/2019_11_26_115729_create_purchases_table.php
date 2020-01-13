@@ -19,22 +19,30 @@ class CreatePurchasesTable extends Migration
             $table->unsignedBigInteger('supplier_id');
             $table->string('supplier_name')->nullable();
             $table->date('date');
-            $table->string('data')->nullable();
+            // $table->string('data')->nullable();
             $table->unsignedBigInteger('payment_conditions');
-            $table->unsignedBigInteger('discount');
-            $table->string('discount_type');
-            $table->unsignedBigInteger('payment');
-            $table->string('payment_type');
-            $table->unsignedBigInteger('repo_id');
+            $table->unsignedBigInteger('discount')->nullable();
+            $table->string('discount_type')->nullable();
+            $table->unsignedBigInteger('payment')->nullable();
+            $table->string('payment_type')->nullable();
+            $table->unsignedBigInteger('repo_id')->nullable();
             $table->string('repo_name')->nullable();
-            $table->unsignedBigInteger('shipment_costs');
-            $table->boolean('paymeny_check')->default(0);
+            $table->unsignedBigInteger('shipment_costs')->nullable();
+            $table->boolean('payment_check')->default('0');
             $table->string('pay_way')->nullable();
             $table->unsignedBigInteger('pay_id')->nullable();
-            $table->boolean('received')->default(0);
+            $table->text('notes')->nullable();
+            $table->boolean('paid')->default('0');
+            $table->string('paid_way')->nullable();
+            $table->unsignedBigInteger('paid_id')->nullable();
+            $table->boolean('received')->default('0');
+            $table->datetime('receiving_date')->nullable();
+            $table->json('tag')->nullable();
             $table->timestamps();
 
             $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
+            $table->foreign('repo_id')->references('id')->on('repos')->onDelete('cascade');
+
         });
     }
 
